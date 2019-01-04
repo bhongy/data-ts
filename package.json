@@ -5,7 +5,14 @@
   "repository": "git@github.com:bhongy/typescript-fp.git",
   "author": "Thanik Bhongbhibhat <email@thanik.me>",
   "license": "MIT",
+  "scripts": {
+    "clean": "rm ./dist/**",
+    "compile": "yarn clean && tsc"
+  },
   "devDependencies": {
+    "@types/jest": "^23.3.11",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.2.2"
   }
 }
