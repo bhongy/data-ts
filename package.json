@@ -1,0 +1,11 @@
+{
+  "name": "typescript-fp",
+  "version": "1.0.0",
+  "description": "Fantasyland-compliant Algebraic Data Types written in Typescript",
+  "repository": "git@github.com:bhongy/typescript-fp.git",
+  "author": "Thanik Bhongbhibhat <email@thanik.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.2.2"
+  }
+}
