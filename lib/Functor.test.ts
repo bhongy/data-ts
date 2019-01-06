@@ -6,6 +6,7 @@ describe('Functor', () => {
     const identity = <T>(v: T): T => v;
     const u = Functor.of('Saarbrücken');
     expect(u.map(identity)).toEqual(u);
+    expect(u.map(identity)).toEqual(Functor.of('Saarbrücken'));
   });
 
   // composition: `u.map(x => f(g(x))) == u.map(g).map(f)`
@@ -17,4 +18,11 @@ describe('Functor', () => {
   });
 
   // it('lift (a -> b) into (f a -> f b) function');
+
+  it('folds', () => {
+    const square = (x: number) => x ** 2;
+    const u = Functor.of(5);
+    expect(u.fold(x => x)).toEqual(5);
+    expect(u.fold(square)).toEqual(25);
+  });
 });
