@@ -12,3 +12,10 @@ https://github.com/rpominov/static-land
 $ yarn jest
 $ yarn jest --watch
 ```
+
+
+## TODO Ideas
+
+- implements instances like: Either, Maybe
+- implements naive, non-persistent (but immutable) versions of: LinkedList, Stack, Tree, Dictionary (still useful for small inputs)
+- implements **persistent** versions of: LinkedList, Stack, Tree, Dictionary
