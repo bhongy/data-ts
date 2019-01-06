@@ -42,6 +42,9 @@ export const fmap = <T, U>(f: (x: T) => U) => (fx: Functor<T>): Functor<U> =>
 
 // this class is an abstraction over language primitive so
 // it will define what it means for two of its instance to be equal
+// although Functor doesn't care if the contained type is of typeclass Eq
+// (can be compared for equality) so maybe this is not part of Functor's spec
+// we just need equality for testing
 // equal :: (Functor f) => f a -> f b -> boolean
 
 // ensure the runtime "type" only create by this contructor
