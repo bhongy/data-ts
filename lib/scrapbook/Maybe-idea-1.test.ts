@@ -1,4 +1,4 @@
-import { Maybe } from './Maybe';
+import * as Maybe from './Maybe-idea-1';
 
 describe('Maybe', () => {
   // it('map nothing to nothing', () => {
