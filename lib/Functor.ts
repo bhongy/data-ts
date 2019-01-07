@@ -14,7 +14,7 @@ class Functor<T> {
 
   // a.k.a. lateral function application
   map<U>(f: (x: T) => U): Functor<U> {
-    return new Functor(f(this.value));
+    return new Functor(this.fold(f));
   }
 
   // a.k.a. reduce type to the contained value - get the value out
