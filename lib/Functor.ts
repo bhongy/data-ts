@@ -26,7 +26,7 @@ class Functor<T> {
 
 // of :: (Functor f) => a -> f a
 export const of = <T>(x: T): Functor<T> => new Functor(x);
-
+export type UID<T> = Functor<T>;
 
 /** IDEAS */
 
@@ -44,6 +44,7 @@ export const fmap = <T, U>(f: (x: T) => U) => (fx: Functor<T>): Functor<U> =>
 // (can be compared for equality) so maybe this is not part of Functor's spec
 // we just need equality for testing
 // equal :: (Functor f) => f a -> f b -> boolean
+// ^ this is the property of Setiod, not Functor
 
 // ensure the runtime "type" only create by this contructor
 // preventing user to write tests that rely on implementation detail like
