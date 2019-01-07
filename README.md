@@ -2,8 +2,10 @@
 
 Fantasyland-compliant Data Types written in Typescript.
 
-https://github.com/fantasyland/fantasy-land
-https://github.com/rpominov/static-land
+![algebraic data structure dependencies](./dependencies.png)
+
+- https://github.com/fantasyland/fantasy-land
+- https://github.com/rpominov/static-land
 
 
 ## Run Test
