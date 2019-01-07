@@ -3,8 +3,6 @@
  *
  * Specification:
  * - implements `map` method: `map :: Functor f => f a ~> (a -> b) -> f b`
- *   - `f` must be a function
- *   - `f` can returns any value
  *
  * Properties:
  * - identity: `u.map(a => a) == u`
