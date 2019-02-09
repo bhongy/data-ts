@@ -30,5 +30,13 @@ describe('Functor', () => {
     });
   });
 
+  it('supports mapping functions', () => {
+    const u = Functor.of((s: string) => s.toUpperCase())
+      .map(f => (s: string) => `${f(s)}!!!`)
+      .map(f => f('hello'));
+
+    expect(u).toEqual(Functor.of('HELLO!!!'));
+  });
+
   // it('lift (a -> b) into (f a -> f b) function');
 });

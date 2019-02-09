@@ -26,7 +26,6 @@ class Functor<T> {
 
 // of :: (Functor f) => a -> f a
 export const of = <T>(x: T): Functor<T> => new Functor(x);
-export type UID<T> = Functor<T>;
 
 /** IDEAS */
 
