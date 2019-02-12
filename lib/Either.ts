@@ -34,8 +34,9 @@ class Left<E> implements Functor.Interface<E>, Apply.Interface<E> {
     return this;
   }
 
-  ap<B>(b: Left<B>): Left<B>;
-  ap(b: Right<any>): Left<E>;
+  // `.ap` spec: `b` must be an Apply of a function
+  ap<B extends Function>(b: Left<B>): Left<B>;
+  ap(b: Right<Function>): Left<E>;
   ap(b: Either): Left<any> {
     return isLeft(b) ? b : this;
   }
@@ -61,10 +62,10 @@ class Right<T> implements Functor.Interface<T>, Apply.Interface<T> {
     return right(this.chain(f));
   }
 
-  ap<B>(b: Left<B>): Left<B>;
+  ap<B extends Function>(b: Left<B>): Left<B>;
   ap<U>(b: Right<(x: T) => U>): Right<U>;
   ap(b: Either): Either {
-    return isLeft(b) ? b.chain(left) : b.chain(this.map.bind(this));
+    return isLeft(b) ? b.chain(left) : b.chain(f => this.map(f));
   }
 }
 
@@ -88,3 +89,5 @@ export const of = right;
 export const fromNullable = <T>(
   x: undefined | null | T
 ): Left<null> | Right<T> => (x != null ? right(x) : left(null));
+
+// export const liftA2 = (fn, m1, m2) => m2.ap(m1.map(fn));
