@@ -13,6 +13,11 @@
  * use `lift` to apply a curry function with "Apply" arguments
  * - https://github.com/fantasyland/fantasy-land/issues/283#issuecomment-362183754
  * - https://github.com/fantasyland/fantasy-land/issues/242
+ * - https://github.com/fantasyland/fantasy-land/issues/181
+ *
+ * This signature is conceptually similar to `value.apply(function)`
+ * while the old (Haskell-consistent) signature
+ * is conceptually similar to `function.appy(value)`
  *
  * Properties:
  * - composition: `c.ap(b.ap(a.map(f => g => x => f(g(x))))) == c.ap(b).ap(a)`

@@ -60,6 +60,7 @@ class Right<T> implements Functor.Interface<T>, Apply.Interface<T> {
   map<U>(f: (x: T) => U): Right<U> {
     // is .chain or .fold correct here?
     return right(this.chain(f));
+    // return this.ap(of(f));
   }
 
   ap<B extends Function>(b: Left<B>): Left<B>;
@@ -67,20 +68,21 @@ class Right<T> implements Functor.Interface<T>, Apply.Interface<T> {
   ap(b: Either): Either {
     return isLeft(b) ? b.chain(left) : b.chain(f => this.map(f));
   }
+
+  // join :: Monad m => m (m a) -> m a
 }
+
+const isLeft = <E>(either: Either<E, any>): either is Left<E> =>
+  either instanceof Left;
+const isRight = <T>(either: Either<any, T>): either is Right<T> =>
+  either instanceof Right;
 
 /** Public Interfaces */
 
 export type Either<E = any, T = any> = Left<E> | Right<T>;
-
 export const left = <E>(e: E) => new Left(e);
-export const isLeft = <E>(either: Either<E, any>): either is Left<E> =>
-  either instanceof Left;
-
 export const right = <T>(x: T) => new Right(x);
-export const isRight = <T>(either: Either<any, T>): either is Right<T> =>
-  either instanceof Right;
-
+// permit "lifting" `null` and `undefined`
 // of :: (Applicative f) => a -> f a
 export const of = right;
 
@@ -90,4 +92,11 @@ export const fromNullable = <T>(
   x: undefined | null | T
 ): Left<null> | Right<T> => (x != null ? right(x) : left(null));
 
-// export const liftA2 = (fn, m1, m2) => m2.ap(m1.map(fn));
+// export const liftA = (fn, m1) => m1.map(fn);
+// export const liftA2 = (fn, m1, m2) => m2.ap(liftA(fn, m1));
+// export const liftA3 = (fn, m1, m2, m3) => m3.ap(liftA2(fn, m1, m2));
+// const liftAN = (fn, m1, ...ms) =>
+//   ms.reduce((prev, curr) => curr.ap(prev), liftA(fn, m1));
+
+// const fromLeft = <E, T>(either: Either<E, any>, defaultValue: T): Left<E> | T =>
+//   isLeft(either) ? either.chain((x: E) => x) : defaultValue;

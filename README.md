@@ -37,6 +37,7 @@ $ yarn jest --watch
 - https://github.com/rpominov/static-land
 - https://github.com/gcanti/fp-ts
 - https://github.com/sanctuary-js
+- https://github.com/evilsoft/crocks
 - https://funkia.github.io/jabz/
 - https://github.com/origamitower/folktale
 - https://github.com/ramda/ramda-fantasy
