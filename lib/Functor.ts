@@ -6,13 +6,19 @@
  *
  * Properties:
  * - identity: `u.map(a => a) == u`
- * - composition: `u.map(x => f(g(x))) == u.map(g).map(f)`
+ *   "mapping identity over item(s) should have no effect"
+ * - composition: `u.map(x => g(f(x))) == u.map(f).map(g)`
+ *   "mapping a function composition `g . f` is the same as mapping `f` then `g`"
+ *
+ * Intuitions:
+ * - applying a function to a value in a context (without altering the context)
+ * - lifting a function into the context
  */
 
 import { identity } from './utils';
 
 interface IFunctor<T> {
-  // a.k.a. lateral function application
+  // a.k.a. fmap
   map<U>(f: (x: T) => U): IFunctor<U>;
 }
 export { IFunctor as Interface };
@@ -26,7 +32,7 @@ export function Properties(Subject: { of: <T>(x: T) => IFunctor<T> }) {
       expect(u.map(identity)).toEqual(Subject.of('Saarbrücken'));
     });
 
-    // composition: `u.map(x => f(g(x))) == u.map(g).map(f)`
+    // composition: `u.map(x => g(f(x))) == u.map(f).map(g)`
     // i.e. chaining maps preserves function composition
     test('composition', () => {
       const add10 = (x: number) => x + 10;
