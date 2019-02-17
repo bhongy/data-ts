@@ -56,13 +56,13 @@ describe('Either', () => {
     });
 
     describe('.ap', () => {
-      test('Right(a).ap(Left(b) == Left(b)', () => {
+      test('Right(a).ap(Left(b)) == Left(b)', () => {
         const a = Either.right(10);
         const b = Either.left(square);
         expect(a.ap(b)).toEqual(b);
       });
 
-      test('Right(a).ap(Right(b) == Right(b(x))', () => {
+      test('Right(a).ap(Right(b)) == Right(b(x))', () => {
         const a = Either.right(10);
         const b = Either.right(square);
         expect(a.ap(b)).toEqual(Either.right(square(10)));

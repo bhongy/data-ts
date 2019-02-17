@@ -66,7 +66,7 @@ class Right<T> implements Functor.Interface<T>, Apply.Interface<T> {
   ap<B extends Function>(b: Left<B>): Left<B>;
   ap<U>(b: Right<(x: T) => U>): Right<U>;
   ap(b: Either): Either {
-    return isLeft(b) ? b.chain(left) : b.chain(f => this.map(f));
+    return isLeft(b) ? b : b.chain(f => this.map(f));
   }
 
   // join :: Monad m => m (m a) -> m a
