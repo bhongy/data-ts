@@ -1,12 +1,9 @@
 # typescript-fp
 
-Fantasyland-compliant Data Types written in Typescript.
+Common algebraic structures heavily inspired by Haskell typeclasses adapted for fluent [pointfree](https://wiki.haskell.org/Pointfree) interfaces in Typescript. Strictly typed.
 
-![algebraic data structure dependencies](./dependencies.png)
-
-- https://github.com/fantasyland/fantasy-land
-- https://github.com/rpominov/static-land
-
+![Relationship among Haskell algebraic typeclasses](./haskell-typesclasses-relationship.png)
+Source: [The Typeclassopedia](https://wiki.haskell.org/wikiupload/8/85/TMR-Issue13.pdf) by Brent Yorgey
 
 ## Run Test
 
@@ -31,7 +28,7 @@ $ yarn jest --watch
 - implements **persistent** versions of: LinkedList, Stack, Tree, Dictionary
 
 
-## References
+## References & Inspirations
 
 - https://github.com/fantasyland/fantasy-land
 - https://github.com/rpominov/static-land
@@ -44,11 +41,13 @@ $ yarn jest --watch
 - https://github.com/futurize/futurize
 - https://github.com/fluture-js
 
+Note: this project does not implemented to be in compliant with [Fantasyland](https://github.com/fantasyland/fantasy-land) but I draw a lot of inspiration from it. I however opt to be in consistent with Haskell interfaces but adapt it to be ergonomic in Typescript/Javascript.
+
 
 ## Brain dump
 
 - semigroup/monoid is useful because it allows you to implement pairwise funtions/operators and they will just work on your monoid (e.g. list). With associativity and that allows divide & conquer algorithms, parallelization, and incremental accumulation.
-- function composition can be a monoid if the functions have the same type of input and output (endomorphisms)
+- function composition can be a monoid if the functions have the same type of input and output (endomorphism)
 - hence, a monad is just a monoid in the category of endofunctors
 
 > A **functor** is a structure-preserving transformation between categories. It's some way to map objects from one category to objects of another category while also preserving the arrows between objects—think of it as a category homomorphism. ... An **endofunctor** is a functor from one category back to the same category.

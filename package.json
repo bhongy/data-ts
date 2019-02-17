@@ -1,7 +1,7 @@
 {
   "name": "typescript-fp",
   "version": "1.0.0",
-  "description": "Fantasyland-compliant Algebraic Data Types written in Typescript",
+  "description": "Common algebraic structures heavily inspired by Haskell typeclasses adapted for fluent pointfree interfaces in Typescript.",
   "repository": "git@github.com:bhongy/typescript-fp.git",
   "author": "Thanik Bhongbhibhat <email@thanik.me>",
   "license": "MIT",
