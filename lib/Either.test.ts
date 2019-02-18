@@ -7,11 +7,9 @@ import * as Apply from './Apply';
 // Semigroup
 
 describe('Either', () => {
-  // test applicative first so we know that we can lift (`of`) to the type
-  // Applicative.Properties(Either);
+  // `Left` does not conform to these properties
   Functor.Properties(Either);
   Apply.Properties(Either);
-  // ^ why is it okay that Left doesn't conform to these properties
 
   const square = (x: number) => x * x;
 
@@ -28,16 +26,14 @@ describe('Either', () => {
     });
 
     describe('.ap', () => {
-      test('Left(a).ap(Left(b)) == Left(b)', () => {
-        const a = Either.left(10);
-        const b = Either.left(square);
-        expect(a.ap(b)).toEqual(b);
-      });
+      test('does nothing and returns itself', () => {
+        const u = Either.left(10);
 
-      test('Left(a).ap(Right(b)) == Left(a)', () => {
-        const a = Either.left(10);
-        const b = Either.right(square);
-        expect(a.ap(b)).toEqual(a);
+        const left = Either.left(square);
+        expect(u.ap(left)).toEqual(u);
+
+        const right = Either.right(square);
+        expect(u.ap(right)).toEqual(u);
       });
     });
   });
@@ -56,13 +52,13 @@ describe('Either', () => {
     });
 
     describe('.ap', () => {
-      test('Right(a).ap(Left(b)) == Left(b)', () => {
+      test('Right(x).ap(Left(f)) == Left(f)', () => {
         const a = Either.right(10);
         const b = Either.left(square);
         expect(a.ap(b)).toEqual(b);
       });
 
-      test('Right(a).ap(Right(b)) == Right(b(x))', () => {
+      test('Right(x).ap(Right(f)) == Right(f(x))', () => {
         const a = Either.right(10);
         const b = Either.right(square);
         expect(a.ap(b)).toEqual(Either.right(square(10)));

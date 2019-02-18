@@ -17,7 +17,8 @@ const $type = Symbol('Either.type');
 const $Left = Symbol('Either.Left');
 const $Right = Symbol('Either.Right');
 
-class Left<E> implements Functor.Interface<E>, Apply.Interface<E> {
+// TODO: have it derives from Bifunctor so we can make it typecheck
+class Left<E> implements /* Functor.Interface<E>, */ Apply.Interface<E> {
   // otherwise test: `expect(left(x)).toEqual(right(x))` will not fail
   private readonly [$type] = $Left;
   private readonly [$value]: E;
@@ -26,19 +27,16 @@ class Left<E> implements Functor.Interface<E>, Apply.Interface<E> {
     this[$value] = value;
   }
 
-  chain(f: any): Left<E> {
+  chain(f: (x: E) => unknown): Left<E> {
     return this;
   }
 
-  map(f: any): Left<E> {
+  map(f: (x: E) => unknown): Left<E> {
     return this;
   }
 
-  // `.ap` spec: `b` must be an Apply of a function
-  ap<B extends Function>(b: Left<B>): Left<B>;
-  ap(b: Right<Function>): Left<E>;
-  ap(b: Either): Left<any> {
-    return isLeft(b) ? b : this;
+  ap(b: Either): Left<E> {
+    return this;
   }
 }
 
@@ -60,13 +58,15 @@ class Right<T> implements Functor.Interface<T>, Apply.Interface<T> {
   map<U>(f: (x: T) => U): Right<U> {
     // is .chain or .fold correct here?
     return right(this.chain(f));
-    // return this.ap(of(f));
   }
 
-  ap<B extends Function>(b: Left<B>): Left<B>;
+  ap<B = (x: T) => unknown>(b: Left<B>): Left<B>;
   ap<U>(b: Right<(x: T) => U>): Right<U>;
-  ap(b: Either): Either {
+  ap<U>(b: Either): Either {
     return isLeft(b) ? b : b.chain(f => this.map(f));
+    // this also correct and is better (program to an interface)
+    // but the typescript type inference seems to need typeguard
+    // return b.chain(f => this.map(f));
   }
 
   // join :: Monad m => m (m a) -> m a
