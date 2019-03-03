@@ -24,6 +24,10 @@ class Nothing implements Functor.Interface<any> {
     return this;
   }
 
+  chain(f: (x: any) => Maybe<any>): Nothing {
+    return this;
+  }
+
   fold<U>(defaultValue: U): U {
     return defaultValue;
   }
@@ -47,6 +51,10 @@ class Just<T> implements Functor.Interface<T> {
     // should we throw instead of returning Nothing?
     // @ts-ignore
     return typeof x === 'function' ? other.map(x) : nothing();
+  }
+
+  chain<U>(f: (x: T) => Maybe<U>): Maybe<U> {
+    return f(this[$value]);
   }
 
   fold(defaultValue: any): T {

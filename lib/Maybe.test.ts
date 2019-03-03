@@ -2,6 +2,8 @@ import * as Maybe from './Maybe';
 import * as Functor from './Functor';
 
 describe('Maybe', () => {
+  const double = (x: number) => x * 2;
+
   Functor.Properties(Maybe);
   // Apply
   // Applicative
@@ -9,7 +11,6 @@ describe('Maybe', () => {
   describe('(.ap) { WIP }', () => {
     const { just } = Maybe;
     const nothing = Maybe.nothing();
-    const double = (x: number) => x * 2;
 
     it('returns Nothing if either Maybe is Nothing', () => {
       expect(nothing.ap(just(7))).toEqual(nothing);
@@ -54,6 +55,25 @@ describe('Maybe', () => {
         expect(actual).toEqual(expected);
       });
     });
+  });
+
+  describe('(.chain) { WIP }', () => {
+    const maybeNumber = (x: unknown): Maybe.Maybe<number> =>
+      typeof x === 'number' ? Maybe.just(x) : Maybe.nothing();
+
+    expect(
+      // @ts-ignore
+      Maybe.just(10)
+        .chain(maybeNumber)
+        .map(double)
+    ).toEqual(Maybe.just(20));
+
+    expect(
+      // @ts-ignore
+      Maybe.just({})
+        .chain(maybeNumber)
+        .map(double)
+    ).toEqual(Maybe.nothing());
   });
 
   // fold -> taking the value out
