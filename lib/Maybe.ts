@@ -13,63 +13,105 @@ const $type = Symbol('Maybe.type');
 const $Nothing = Symbol('Maybe.Nothing');
 const $Just = Symbol('Maybe.Just');
 
-class Nothing implements Functor.Interface<any> {
+class Nothing<A> implements Functor.Interface<A> {
   private readonly [$type] = $Nothing;
 
-  map(f: (x: any) => any): Nothing {
-    return this;
+  map<B>(f: (a: A) => B): Maybe<B> {
+    return nothing;
   }
 
-  ap(b: Maybe<any>): Nothing {
-    return this;
+  _ap<B>(other: Maybe<(a: A) => B>): Maybe<B> {
+    return nothing;
   }
 
-  chain(f: (x: any) => Maybe<any>): Nothing {
-    return this;
+  // A is (b: B) => C
+  ap<B, C>(this: Maybe<(b: B) => C>, other: Maybe<B>): Maybe<C> {
+    return other._ap(this);
   }
 
-  fold<U>(defaultValue: U): U {
+  chain<B>(f: (a: A) => Maybe<B>): Maybe<B> {
+    return nothing;
+  }
+
+  fold<B>(defaultValue: B): B {
     return defaultValue;
+  }
+
+  toString(): string {
+    return 'Nothing';
+  }
+
+  inspect() {
+    return this.toString();
   }
 }
 
-class Just<T> implements Functor.Interface<T> {
+class Just<A> implements Functor.Interface<A> {
   private readonly [$type] = $Just;
-  private readonly [$value]: T;
+  private readonly [$value]: A;
 
-  constructor(value: T) {
+  constructor(value: A) {
     this[$value] = value;
   }
 
-  map<U>(f: (x: T) => U): Just<U> {
+  // map :: Maybe a ~> (a -> b) -> Maybe b
+  map<B>(f: (a: A) => B): Maybe<B> {
     return just(f(this[$value]));
   }
 
-  // how to ensure `T` is a function from this function
-  ap<U>(other: Maybe<U>) {
-    const x = this[$value];
-    // should we throw instead of returning Nothing?
-    // @ts-ignore
-    return typeof x === 'function' ? other.map(x) : nothing();
+  _ap<B>(other: Maybe<(a: A) => B>): Maybe<B> {
+    return other instanceof Nothing ? nothing : just(other[$value](this[$value]));
   }
 
-  chain<U>(f: (x: T) => Maybe<U>): Maybe<U> {
+  // ap :: Maybe (a -> b) ~> Maybe a -> Maybe b
+  ap<B, C>(this: Maybe<(b: B) => C>, other: Maybe<B>): Maybe<C> {
+    return other._ap(this);
+  }
+
+  // chain :: Maybe a ~> (a -> Maybe b) -> Maybe b
+  chain<U>(f: (x: A) => Maybe<U>): Maybe<U> {
     return f(this[$value]);
   }
 
-  fold(defaultValue: any): T {
+  fold<U>(defaultValue: U): A {
     return this[$value];
+  }
+
+  toString(): string {
+    return `Just ${this[$value]}`;
+  }
+
+  inspect(): string {
+    return this.toString();
   }
 }
 
 /** Public Interfaces */
 
-export type Maybe<T> = Nothing | Just<T>;
-export const nothing = () => new Nothing();
-export const just = <T>(x: T) => new Just(x);
+export type Maybe<T> = Nothing<T> | Just<T>;
+export const nothing: Maybe<never> = new Nothing();
+export const just = <T>(x: T): Maybe<T> => new Just(x);
 
 export const of = just;
 // export const empty = nothing;
 
-export const fromNullable = <T>(x: undefined | null | T): Nothing | Just<T> =>
-  x == null ? nothing() : just(x);
+export const fromNullable = <T>(x: undefined | null | T): Maybe<T> =>
+  x == null ? nothing : just(x);
+
+// ---
+
+// type Curried<A, B> = (a: A) => B;
+// type Curried2<A, B, C> = (a: A) => Curried<B, C>;
+
+// Lift a binary function to actions.
+// liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+// const liftA2 = <
+//   MA extends Maybe<any>,
+//   MB extends Maybe<any>,
+//   MC extends Maybe<any>
+// >(
+//   fn: Curried2<MA, MB, MC>
+// ) => (a: MA) => (b: MB) =>
+//   of(fn)
+//     .ap(a)
+//     .ap(b);
