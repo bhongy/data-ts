@@ -50,6 +50,5 @@ export const just = <T>(x: T) => new Just(x);
 
 export const of = just;
 
-export const fromNullable = <T>(
-  x: undefined | null | T
-): Nothing | Just<T> => (x == null ? nothing() : just(x));
+export const fromNullable = <T>(x: undefined | null | T): Nothing | Just<T> =>
+  x == null ? nothing() : just(x);

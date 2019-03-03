@@ -17,4 +17,11 @@ describe('Maybe', () => {
       expect(Maybe.nothing().fold(DEFAULT)).toBe(DEFAULT);
     });
   });
+
+  describe('fromNullable', () => {
+    test('returns Nothing from null or undefined', () => {
+      expect(Maybe.fromNullable(undefined)).toEqual(Maybe.nothing());
+      expect(Maybe.fromNullable(null)).toEqual(Maybe.nothing());
+    });
+  });
 });
