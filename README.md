@@ -1,4 +1,4 @@
-# typescript-fp
+# data-ts
 
 Common algebraic structures heavily inspired by Haskell typeclasses adapted for fluent [pointfree](https://wiki.haskell.org/Pointfree) interfaces in Typescript. Strictly typed.
 
