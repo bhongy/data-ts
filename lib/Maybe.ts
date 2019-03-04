@@ -20,13 +20,9 @@ class Nothing<A> implements Functor.Interface<A> {
     return nothing;
   }
 
-  _ap<B>(other: Maybe<(a: A) => B>): Maybe<B> {
-    return nothing;
-  }
-
   // A is (b: B) => C
   ap<B, C>(this: Maybe<(b: B) => C>, other: Maybe<B>): Maybe<C> {
-    return other._ap(this);
+    return nothing;
   }
 
   chain<B>(f: (a: A) => Maybe<B>): Maybe<B> {
@@ -56,24 +52,21 @@ class Just<A> implements Functor.Interface<A> {
 
   // map :: Maybe a ~> (a -> b) -> Maybe b
   map<B>(f: (a: A) => B): Maybe<B> {
-    return just(f(this[$value]));
+    return this.chain(x => of(f(x)));
   }
 
-  _ap<B>(other: Maybe<(a: A) => B>): Maybe<B> {
-    return other instanceof Nothing ? nothing : just(other[$value](this[$value]));
-  }
-
+  // A is (b: B) => C
   // ap :: Maybe (a -> b) ~> Maybe a -> Maybe b
   ap<B, C>(this: Maybe<(b: B) => C>, other: Maybe<B>): Maybe<C> {
-    return other._ap(this);
+    return this.chain(f => other.map(f));
   }
 
   // chain :: Maybe a ~> (a -> Maybe b) -> Maybe b
-  chain<U>(f: (x: A) => Maybe<U>): Maybe<U> {
+  chain<B>(f: (a: A) => Maybe<B>): Maybe<B> {
     return f(this[$value]);
   }
 
-  fold<U>(defaultValue: U): A {
+  fold<B>(defaultValue: B): A {
     return this[$value];
   }
 
@@ -88,15 +81,15 @@ class Just<A> implements Functor.Interface<A> {
 
 /** Public Interfaces */
 
-export type Maybe<T> = Nothing<T> | Just<T>;
+export type Maybe<A> = Nothing<A> | Just<A>;
 export const nothing: Maybe<never> = new Nothing();
-export const just = <T>(x: T): Maybe<T> => new Just(x);
+export const just = <A>(a: A): Maybe<A> => new Just(a);
 
 export const of = just;
 // export const empty = nothing;
 
-export const fromNullable = <T>(x: undefined | null | T): Maybe<T> =>
-  x == null ? nothing : just(x);
+export const fromNullable = <A>(a: undefined | null | A): Maybe<A> =>
+  a == null ? nothing : just(a);
 
 // ---
 
