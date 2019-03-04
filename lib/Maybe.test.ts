@@ -1,5 +1,6 @@
 /** TODO: refactor all the tests and use <Typeclass>.Properties tests */
 
+import { constant, Curried3 } from './utils';
 import * as Maybe from './Maybe';
 import * as Functor from './Functor';
 
@@ -11,72 +12,64 @@ describe('Maybe', () => {
   // Apply
   // Applicative
 
-  describe('(.ap) { WIP }', () => {
-    it('returns Nothing if either Maybe is Nothing', () => {
-      expect(nothing.ap(just(7))).toEqual(nothing);
-      expect(just(double).ap(nothing)).toEqual(nothing);
-      expect(nothing.ap(nothing)).toEqual(nothing);
-    });
+  // taking the value out
+  test('.fold', () => {
+    const f = constant('puppy');
+    const g = (s: string) => `cute ${s}`;
 
-    it('returns Just if both Maybes are Justs', () => {
-      expect(just(double).ap(just(7))).toEqual(just(14));
-    });
+    const u: Maybe.Maybe<string> = just('panda');
+    expect(u.fold(f, g)).toBe('cute panda');
 
-    test('(.ap) examples [TEMPORARY]', () => {
-      const add = (x: number) => (y: number) => x + y;
-      const add10 = add(10);
-      const joinWith = (delimeter: string) => (x: string) => (y: string) =>
-        x + delimeter + y;
-
-      [
-        {
-          actual: Maybe.of(add)
-            .ap(just(10))
-            .ap(just(25)),
-          expected: Maybe.of(35),
-        },
-        {
-          // of -> map is an alternative to lift the function
-          actual: Maybe.of('Doe')
-            .map(joinWith(', '))
-            .ap(just('John')),
-          expected: Maybe.of('Doe, John'),
-        },
-      ].forEach(({ actual, expected }) => {
-        expect(actual).toEqual(expected);
-      });
-    });
+    const v: Maybe.Maybe<string> = nothing;
+    expect(v.fold(f, g)).toBe('puppy');
   });
-
-  describe('(.chain) { WIP }', () => {
-    const maybeNumber = (x: unknown): Maybe.Maybe<number> =>
-      typeof x === 'number' ? just(x) : nothing;
-
-    expect(
-      just(10)
-        .chain(maybeNumber)
-        .map(double)
-    ).toEqual(just(20));
-
-    expect(
-      just({})
-        .chain(maybeNumber)
-        .map(double)
-    ).toEqual(nothing);
-  });
-
-  // fold -> taking the value out
-  // describe('(.fold)', () => {
-  //   test('Just: returns the contained value', () => {
-  //     expect(just('arugula').fold('broccoli')).toBe('arugula');
-  //   });
-
-  //   test('Nothing: returns the default value', () => {
-  //     expect(nothing.fold(DEFAULT)).toBe(DEFAULT);
-  //   });
-  // });
 
   // (.map) use cases
+
+  test('.ap', () => {
+    const f = (x: number) => x * 2;
+    const u = just(5);
+
+    expect(nothing.ap(nothing)).toEqual(nothing);
+    expect(just(f).ap(nothing)).toEqual(nothing);
+    expect(nothing.ap(u)).toEqual(nothing);
+    expect(just(f).ap(u)).toEqual(just(10));
+  });
+
+  test('.ap (example)', () => {
+    const add = (x: number) => (y: number) => x + y;
+    const joinWith: Curried3<
+      string,
+      string,
+      string,
+      string
+    > = delimeter => x => y => x + delimeter + y;
+
+    [
+      [
+        Maybe.of(add)
+          .ap(just(10))
+          .ap(just(25)),
+        Maybe.of(35),
+      ],
+      [
+        // of -> map is an alternative to lift the function
+        Maybe.of('Doe')
+          .map(joinWith(', '))
+          .ap(just('John')),
+        Maybe.of('Doe, John'),
+      ],
+    ].forEach(([a, b]) => expect(a).toEqual(b));
+  });
+
+  describe('.chain', () => {
+    const f = (x: number) => just(x ** 2);
+    const g = constant(nothing);
+
+    expect(just(5).chain(f)).toEqual(just(25));
+    expect(just(5).chain(g)).toEqual(nothing);
+    expect(nothing.chain(f)).toEqual(nothing);
+  });
 
   describe('of', () => {
     test('always equivalent to Just', () => {

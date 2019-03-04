@@ -16,6 +16,10 @@ const $Just = Symbol('Maybe.Just');
 class Nothing<A> implements Functor.Interface<A> {
   private readonly [$type] = $Nothing;
 
+  fold<B, C>(f: () => B, g: (a: A) => C): B {
+    return f();
+  }
+
   map<B>(f: (a: A) => B): Maybe<B> {
     return nothing;
   }
@@ -27,10 +31,6 @@ class Nothing<A> implements Functor.Interface<A> {
 
   chain<B>(f: (a: A) => Maybe<B>): Maybe<B> {
     return nothing;
-  }
-
-  fold<B>(defaultValue: B): B {
-    return defaultValue;
   }
 
   toString(): string {
@@ -50,6 +50,10 @@ class Just<A> implements Functor.Interface<A> {
     this[$value] = value;
   }
 
+  fold<B, C>(f: () => B, g: (a: A) => C): C {
+    return g(this[$value]);
+  }
+
   // map :: Maybe a ~> (a -> b) -> Maybe b
   map<B>(f: (a: A) => B): Maybe<B> {
     return this.chain(x => of(f(x)));
@@ -64,10 +68,6 @@ class Just<A> implements Functor.Interface<A> {
   // chain :: Maybe a ~> (a -> Maybe b) -> Maybe b
   chain<B>(f: (a: A) => Maybe<B>): Maybe<B> {
     return f(this[$value]);
-  }
-
-  fold<B>(defaultValue: B): A {
-    return this[$value];
   }
 
   toString(): string {
@@ -92,9 +92,6 @@ export const fromNullable = <A>(a: undefined | null | A): Maybe<A> =>
   a == null ? nothing : just(a);
 
 // ---
-
-// type Curried<A, B> = (a: A) => B;
-// type Curried2<A, B, C> = (a: A) => Curried<B, C>;
 
 // Lift a binary function to actions.
 // liftA2 :: (a -> b -> c) -> f a -> f b -> f c
