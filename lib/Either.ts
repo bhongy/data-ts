@@ -6,8 +6,7 @@
  *   the internal knowledge about Left vs Right. I might change my mind if there're reasonable cases.
  */
 
-import * as Functor from './Functor';
-import * as Apply from './Apply';
+// import * as Applicative from './Applicative';
 
 /** Internal implementation. Do not export. */
 
@@ -17,8 +16,7 @@ const $type = Symbol('Either.type');
 const $Left = Symbol('Either.Left');
 const $Right = Symbol('Either.Right');
 
-// TODO: have it derives from Bifunctor so we can make it typecheck
-class Left<E> implements /* Functor.Interface<E>, */ Apply.Interface<E> {
+class Left<E> {
   // otherwise test: `expect(left(x)).toEqual(right(x))` will not fail
   private readonly [$type] = $Left;
   private readonly [$value]: E;
@@ -40,7 +38,7 @@ class Left<E> implements /* Functor.Interface<E>, */ Apply.Interface<E> {
   }
 }
 
-class Right<T> implements Functor.Interface<T>, Apply.Interface<T> {
+class Right<T> {
   private readonly [$type] = $Right;
   private readonly [$value]: T;
   // constructor(private readonly value: T) {}

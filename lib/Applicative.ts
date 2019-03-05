@@ -1,64 +1,81 @@
 /**
- * https://github.com/fantasyland/fantasy-land#applicative
+ * Pointed Applicative Functor.
  *
- * Extends: Apply
+ * Derived: Functor.
  *
  * Specification:
- * - implements `of` function: `of :: Applicative f => a -> f a`
+ * - implements `of` function: `of :: Pointed f => a -> f a`
+ *   a.k.a. pure, return, unit, point, singleton
+ * - implements `ap` method: `ap :: Applicative f => f (a -> b) -> f a -> f b`
  *
- * Properties:
- * - identity: `u.ap(A.of(x => x)) == u`
- * - homomorphism: `A.of(x).ap(A.of(f)) == A.of(f(x))`
- *   "homomorphism means it preserves the structure (function application)"
- * - interchange: `A.of(x).ap(u) == u.ap(A.of(f => f(x)))`
+ * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
+ * - identity: `A.of(x => x).ap(u) == u`
+ * - composition:
+*    `A.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w) == u.ap(v.ap(w))`
+ * - homomorphism: `A.of(f).ap(A.of(x)) == A.of(f(x))`
+ *   "homomorphism means it preserves structure (function application)"
+ * - interchange: `A.of(f).ap(A.of(x)) == A.of(f => f(x))).ap(f)`
  */
 
-// interface IApply<T> {}
-// export { IApply as Interface };
+import { identity } from './utils';
+import * as Functor from './Functor';
 
-// export function Properties(Subject: { of: Function }) {
-//   describe('Apply Properties (.ap)', () => {
-//     // composition: `a.ap(b.ap(c.map(f => g => x => f(g(x))))) == a.ap(b).ap(c)`
-//     test('composition', () => {
-//       const a = Subject.of(5);
-//       const b = Subject.of((x: number) => x ** 2);
-//       const c = Subject.of((x: number) => x * 4);
-//       // @ts-ignore
-//       const composed = a.ap(b.ap(c.map(f => g => x => f(g(x)))));
-//       const chained = a.ap(b).ap(c);
-//       expect(composed).toEqual(chained);
-//       expect(composed).toEqual(Subject.of(100));
-//     });
+// to be correct, it has to extends Pointed Functor (with `of`)
+// but `of` is a static not an instance method - TODO for the future
+interface IApplicative<T> extends Functor.Interface<T> {
+  // a.k.a. apply contained function to a contained value
+  // you might get a container of partially applied function or a value out
+  ap<A, B>(
+    this: IApplicative<(x: A) => B>,
+    other: IApplicative<A>
+  ): IApplicative<B>;
+}
 
-//     test('[temporary] a.ap(A(f)) is the same as a.map(f)', () => {
-//       const a = Subject.of('squirrels');
-//       const f = (s: string) => s.toUpperCase();
-//       const b = Subject.of(f);
-//       const applied = a.ap(b);
-//       const mapped = a.map(f);
-//       expect(applied).toEqual(mapped);
-//       expect(applied).toEqual(Subject.of('SQUIRRELS'));
-//     });
+export { IApplicative as Interface };
 
-//     test('[temporary] can start with an Apply of a function', () => {
-//       const a = Subject.of((x: number) => x ** 2);
-//       const b = Subject.of((f: (x: number) => number) => f(5));
-//       expect(a.ap(b)).toEqual(Subject.of(25));
-//     });
+export function Laws(Subject: { of: <T>(x: T) => IApplicative<T> }) {
+  describe('Applicative Laws (.ap)', () => {
+    const times4 = (x: number) => x * 4;
+    const square = (x: number) => x ** 2;
 
-//     test('[temporary] works with a curried function', () => {
-//       const f = (x: number) => (y: number) => (z: number) => x * y * z;
-//       const a = Subject.of(5);
-//       const b = Subject.of(8);
-//       const c = Subject.of(10);
-//       // read `c.ap(b.ap(a.map(f)))` inside-out
-//       // 1) create an Apply of a function by `a.map` (supplies the first argument, `x`)
-//       // 2) `.ap` (apply) `b` (an Apply of a value) to the Apply of the partially applied function
-//       //    (supplies the second argument `y`)
-//       // 3) `.ap` (apply) `c` (an Apply of a value) to the Apply of the partially applied function
-//       //    (supplies the last argument `z`)
-//       // could also be written as: `c.ap(b.ap(a.ap(Subject.of(f))))`
-//       expect(c.ap(b.ap(a.map(f)))).toEqual(Subject.of(400));
-//     });
-//   });
-// }
+    // identity: `A.of(x => x).ap(u) == u`
+    test('identity', () => {
+      const u = Subject.of(5);
+      expect(Subject.of(identity).ap(u)).toEqual(u);
+    });
+
+    // composition:
+    //   `A.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w) == u.ap(v.ap(w))`
+    test('composition', () => {
+      const u = Subject.of(times4);
+      const v = Subject.of(square);
+      const w = Subject.of(5);
+      // @ts-ignore
+      const a = Subject.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w);
+      // const a = Subject.of(compose).ap(u).ap(v).ap(w);
+      const b = u.ap(v.ap(w));
+      expect(a).toEqual(b);
+      expect(a).toEqual(Subject.of(100));
+    });
+
+    // homomorphism: `A.of(f).ap(A.of(x)) == A.of(f(x))`
+    test('homomorphism', () => {
+      const f = times4;
+      const x = 16;
+      const a = Subject.of(f).ap(Subject.of(x));
+      const b = Subject.of(f(x));
+      expect(a).toEqual(b);
+      expect(a).toEqual(Subject.of(64));
+    });
+
+    // interchange: `A.of(f).ap(A.of(x)) == A.of(f => f(x))).ap(f)`
+    test('interchange', () => {
+      const f = square;
+      const a = Subject.of(f).ap(Subject.of(5));
+      // @ts-ignore
+      const b = Subject.of(f => f(5)).ap(Subject.of(f));
+      expect(a).toEqual(b);
+      expect(a).toEqual(Subject.of(25));
+    });
+  });
+}

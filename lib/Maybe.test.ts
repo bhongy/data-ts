@@ -1,16 +1,14 @@
-/** TODO: refactor all the tests and use <Typeclass>.Properties tests */
-
-import { constant, Curried3 } from './utils';
+import { constant } from './utils';
 import * as Maybe from './Maybe';
 import * as Functor from './Functor';
+import * as Applicative from './Applicative';
 
 describe('Maybe', () => {
+  Functor.Laws(Maybe);
+  Applicative.Laws(Maybe);
+
   const { just, nothing } = Maybe;
   const double = (x: number) => x * 2;
-
-  Functor.Properties(Maybe);
-  // Apply
-  // Applicative
 
   // taking the value out
   test('.fold', () => {
@@ -24,8 +22,6 @@ describe('Maybe', () => {
     expect(v.fold(f, g)).toBe('puppy');
   });
 
-  // (.map) use cases
-
   test('.ap', () => {
     const f = (x: number) => x * 2;
     const u = just(5);
@@ -34,32 +30,8 @@ describe('Maybe', () => {
     expect(just(f).ap(nothing)).toEqual(nothing);
     expect(nothing.ap(u)).toEqual(nothing);
     expect(just(f).ap(u)).toEqual(just(10));
-  });
 
-  test('.ap (example)', () => {
-    const add = (x: number) => (y: number) => x + y;
-    const joinWith: Curried3<
-      string,
-      string,
-      string,
-      string
-    > = delimeter => x => y => x + delimeter + y;
-
-    [
-      [
-        Maybe.of(add)
-          .ap(just(10))
-          .ap(just(25)),
-        Maybe.of(35),
-      ],
-      [
-        // of -> map is an alternative to lift the function
-        Maybe.of('Doe')
-          .map(joinWith(', '))
-          .ap(just('John')),
-        Maybe.of('Doe, John'),
-      ],
-    ].forEach(([a, b]) => expect(a).toEqual(b));
+    // how to test type expect error if calling .ap on a non-function Applicative?
   });
 
   describe('.chain', () => {
