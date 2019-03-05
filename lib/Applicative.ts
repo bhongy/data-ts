@@ -10,8 +10,8 @@
  *
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
  * - identity: `A.of(x => x).ap(u) == u`
- * - composition: `A.of(f).ap(a).ap(b) == ???`
- *   A.of(compose).ap(u).ap(v).ap(w) == u.ap(v.ap(w))
+ * - composition:
+*    `A.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w) == u.ap(v.ap(w))`
  * - homomorphism: `A.of(f).ap(A.of(x)) == A.of(f(x))`
  *   "homomorphism means it preserves structure (function application)"
  * - interchange: `A.of(f).ap(A.of(x)) == A.of(f => f(x))).ap(f)`
