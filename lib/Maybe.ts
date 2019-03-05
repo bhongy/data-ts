@@ -2,8 +2,7 @@
  * Use when the cause of error does not need to be communicated.
  */
 
-import * as Functor from './Functor';
-// import * as Apply from './Apply';
+import * as Applicative from './Applicative';
 
 /** Internal implementation. Do not export. */
 
@@ -13,7 +12,7 @@ const $type = Symbol('Maybe.type');
 const $Nothing = Symbol('Maybe.Nothing');
 const $Just = Symbol('Maybe.Just');
 
-class Nothing<A> implements Functor.Interface<A> {
+class Nothing<A> implements Applicative.Interface<A> {
   private readonly [$type] = $Nothing;
 
   fold<B, C>(f: () => B, g: (a: A) => C): B {
@@ -42,7 +41,7 @@ class Nothing<A> implements Functor.Interface<A> {
   }
 }
 
-class Just<A> implements Functor.Interface<A> {
+class Just<A> implements Applicative.Interface<A> {
   private readonly [$type] = $Just;
   private readonly [$value]: A;
 
@@ -93,7 +92,7 @@ export const fromNullable = <A>(a: undefined | null | A): Maybe<A> =>
 
 // ---
 
-// Lift a binary function to actions.
+// Lift a binary function to apply to Applicatives
 // liftA2 :: (a -> b -> c) -> f a -> f b -> f c
 // const liftA2 = <
 //   MA extends Maybe<any>,
