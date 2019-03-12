@@ -15,7 +15,7 @@
  * - lifting a function into the computational context
  */
 
-import { identity } from './utils';
+import { compose, identity } from './utils';
 
 interface IFunctor<T> {
   // a.k.a. fmap
@@ -39,7 +39,7 @@ export function Laws(Subject: { of: <T>(x: T) => IFunctor<T> }) {
       const add10 = (x: number) => x + 10;
       const square = (x: number) => x ** 2;
       const u = Subject.of(3);
-      const composed = u.map((x: number) => square(add10(x)));
+      const composed = u.map(compose(square, add10));
       const chained = u.map(add10).map(square);
       expect(composed).toEqual(chained);
       expect(composed).toEqual(Subject.of(169));

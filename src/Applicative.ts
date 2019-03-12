@@ -11,13 +11,13 @@
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
  * - identity: `A.of(x => x).ap(u) == u`
  * - composition:
-*    `A.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w) == u.ap(v.ap(w))`
+ *    `A.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w) == u.ap(v.ap(w))`
  * - homomorphism: `A.of(f).ap(A.of(x)) == A.of(f(x))`
  *   "homomorphism means it preserves structure (function application)"
  * - interchange: `A.of(f).ap(A.of(x)) == A.of(f => f(x))).ap(f)`
  */
 
-import { identity } from './utils';
+import { Fn, compose, identity } from './utils';
 import * as Functor from './Functor';
 
 // to be correct, it has to extends Pointed Functor (with `of`)
@@ -51,8 +51,10 @@ export function Laws(Subject: { of: <T>(x: T) => IApplicative<T> }) {
       const v = Subject.of(square);
       const w = Subject.of(5);
       // @ts-ignore
-      const a = Subject.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w);
-      // const a = Subject.of(compose).ap(u).ap(v).ap(w);
+      const a = Subject.of(f => g => compose(f, g))
+        .ap(u)
+        .ap(v)
+        .ap(w);
       const b = u.ap(v.ap(w));
       expect(a).toEqual(b);
       expect(a).toEqual(Subject.of(100));
@@ -72,8 +74,7 @@ export function Laws(Subject: { of: <T>(x: T) => IApplicative<T> }) {
     test('interchange', () => {
       const f = square;
       const a = Subject.of(f).ap(Subject.of(5));
-      // @ts-ignore
-      const b = Subject.of(f => f(5)).ap(Subject.of(f));
+      const b = Subject.of((f: Fn<number, number>) => f(5)).ap(Subject.of(f));
       expect(a).toEqual(b);
       expect(a).toEqual(Subject.of(25));
     });

@@ -1,17 +1,16 @@
+import * as $Maybe from './Maybe';
+import { just } from './Maybe';
 import { Curried3 } from './utils';
-import * as Maybe from './Maybe';
 
 describe('Maybe [Examples]', () => {
-  const { just } = Maybe;
-
   describe('.map', () => {
     it('supports mapping of functions', () => {
       const toUpperCase = (s: string) => s.toUpperCase();
-      const u = Maybe.of(toUpperCase)
+      const u = $Maybe.of(toUpperCase)
         .map(f => (s: string) => `${f(s)}!!!`)
         .map(f => f('hello'));
 
-      expect(u).toEqual(Maybe.of('HELLO!!!'));
+      expect(u).toEqual($Maybe.of('HELLO!!!'));
     });
   });
 
@@ -27,17 +26,17 @@ describe('Maybe [Examples]', () => {
 
       [
         [
-          Maybe.of(add)
+          $Maybe.of(add)
             .ap(just(10))
             .ap(just(25)),
-          Maybe.of(35),
+          $Maybe.of(35),
         ],
         [
           // of -> map is an alternative to lift the function
-          Maybe.of('Doe')
+          $Maybe.of('Doe')
             .map(joinWith(', '))
             .ap(just('John')),
-          Maybe.of('Doe, John'),
+          $Maybe.of('Doe, John'),
         ],
       ].forEach(([a, b]) => expect(a).toEqual(b));
     });
