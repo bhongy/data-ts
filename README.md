@@ -15,14 +15,17 @@ $ yarn jest --watch
 ## Instances
 
 - [ ] Identity
-- [~] Either
-- [ ] Maybe
+- [X] Maybe
+- [ ] Either
 - [ ] Task
+- [ ] List
+- [ ] Map
+- [ ] Set
+- [ ] Trie
 
 
 ## TODO Ideas
 
-- implements instances like: Either, Maybe
 - implements the lazy version of Either, Identity types that apply multiple maps per item
 - implements naive, non-persistent (but immutable) versions of: LinkedList, Stack, Tree, Dictionary (still useful for small inputs)
 - implements **persistent** versions of: LinkedList, Stack, Tree, Dictionary
