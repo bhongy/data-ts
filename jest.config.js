@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  rootDir: './lib',
+  rootDir: './src',
   // `js` is needed for node_modules
   moduleFileExtensions: ['js', 'ts'],
   testMatch: ['<rootDir>/**/?(*.)+(test).ts'],
