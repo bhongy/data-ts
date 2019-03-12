@@ -5,11 +5,31 @@ Common algebraic structures heavily inspired by Haskell typeclasses adapted for 
 ![Relationship among Haskell algebraic typeclasses](./haskell-typesclasses-relationship.png)
 Source: [The Typeclassopedia](https://wiki.haskell.org/wikiupload/8/85/TMR-Issue13.pdf) by Brent Yorgey
 
+## Install
+
+```sh
+yarn add data-ts
+```
+
+## Import
+
+```typescript
+import { Maybe } from 'data-ts';
+/* or */
+import * as Maybe from 'data-ts/lib/Maybe';
+```
+
 ## Run Test
 
 ```sh
 $ yarn jest
 $ yarn jest --watch
+```
+
+## Publish
+
+```sh
+$ yarn publish
 ```
 
 ## Instances
