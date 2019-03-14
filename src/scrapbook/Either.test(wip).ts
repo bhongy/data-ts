@@ -1,13 +1,10 @@
 import * as Either from './Either';
-import * as Functor from './Functor';
-// import * as Applicative from './Applicative';
+import * as Monad from '../Monad';
 // Monad
 // Semigroup
 
 describe('Either', () => {
-  // `Left` does not conform to these properties
-  Functor.Laws(Either);
-  // Applicative.Laws(Either);
+  Monad.Laws(Either);
 
   const square = (x: number) => x * x;
 
