@@ -6,7 +6,7 @@
  *   a.k.a fmap, <$>
  *
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
- * - identity: `u.map(a => a) == u`
+ * - identity: `u.map(x => x) == u`
  *   "mapping identity over item(s) should have no effect"
  * - composition: `u.map(compose(f, g)) == u.map(f).map(g)`
  *   "mapping a function composition `g . f` is the same as mapping `f` then `g`"
@@ -25,13 +25,13 @@ interface IFunctor<T> {
 }
 export { IFunctor as Interface };
 
-export function Laws(Subject: { of: <T>(x: T) => IFunctor<T> }) {
+export function Laws(F: { of: <T>(x: T) => IFunctor<T> }) {
   describe('Functor Laws (.map)', () => {
-    // identity: `u.map(a => a) == u`
+    // identity: `u.map(x => x) == u`
     test('identity', () => {
-      const u = Subject.of('Saarbrücken');
+      const u = F.of('Saarbrücken');
       expect(u.map(identity)).toEqual(u);
-      expect(u.map(identity)).toEqual(Subject.of('Saarbrücken'));
+      expect(u.map(identity)).toEqual(F.of('Saarbrücken'));
     });
 
     // composition: `u.map(compose(f, g)) == u.map(f).map(g)`
@@ -40,11 +40,11 @@ export function Laws(Subject: { of: <T>(x: T) => IFunctor<T> }) {
     test('composition', () => {
       const add10 = (x: number) => x + 10;
       const square = (x: number) => x ** 2;
-      const u = Subject.of(3);
+      const u = F.of(3);
       const composed = u.map(compose(square, add10));
       const chained = u.map(add10).map(square);
       expect(composed).toEqual(chained);
-      expect(composed).toEqual(Subject.of(169));
+      expect(composed).toEqual(F.of(169));
     });
   });
 }

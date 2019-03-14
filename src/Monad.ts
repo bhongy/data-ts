@@ -27,6 +27,8 @@ interface IMonad<T> extends Applicative.Interface<T> {
 export { IMonad as Interface };
 
 export function Laws(M: { of<T>(x: T): IMonad<T> }) {
+  Applicative.Laws(M);
+
   describe('Monad Laws (.chain)', () => {
     const x = 5;
     const m = M.of(x);

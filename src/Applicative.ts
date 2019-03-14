@@ -34,50 +34,52 @@ interface IApplicative<T> extends Functor.Interface<T> {
 
 export { IApplicative as Interface };
 
-export function Laws(Subject: { of: <T>(x: T) => IApplicative<T> }) {
+export function Laws(A: { of: <T>(x: T) => IApplicative<T> }) {
+  Functor.Laws(A);
+
   describe('Applicative Laws (.ap)', () => {
     const times4 = (x: number) => x * 4;
     const square = (x: number) => x ** 2;
 
     // identity: `A.of(x => x).ap(u) == u`
     test('identity', () => {
-      const u = Subject.of(5);
-      expect(Subject.of(identity).ap(u)).toEqual(u);
+      const u = A.of(5);
+      expect(A.of(identity).ap(u)).toEqual(u);
     });
 
     // composition:
     //   `A.of(f => g => x => f(g(x))).ap(u).ap(v).ap(w) == u.ap(v.ap(w))`
     test('composition', () => {
-      const u = Subject.of(times4);
-      const v = Subject.of(square);
-      const w = Subject.of(5);
+      const u = A.of(times4);
+      const v = A.of(square);
+      const w = A.of(5);
       // @ts-ignore
-      const a = Subject.of(f => g => compose(f, g))
+      const a = A.of(f => g => compose(f, g))
         .ap(u)
         .ap(v)
         .ap(w);
       const b = u.ap(v.ap(w));
       expect(a).toEqual(b);
-      expect(a).toEqual(Subject.of(100));
+      expect(a).toEqual(A.of(100));
     });
 
     // homomorphism: `A.of(f).ap(A.of(x)) == A.of(f(x))`
     test('homomorphism', () => {
       const f = times4;
       const x = 16;
-      const a = Subject.of(f).ap(Subject.of(x));
-      const b = Subject.of(f(x));
+      const a = A.of(f).ap(A.of(x));
+      const b = A.of(f(x));
       expect(a).toEqual(b);
-      expect(a).toEqual(Subject.of(64));
+      expect(a).toEqual(A.of(64));
     });
 
     // interchange: `A.of(f).ap(A.of(x)) == A.of(f => f(x))).ap(f)`
     test('interchange', () => {
       const f = square;
-      const a = Subject.of(f).ap(Subject.of(5));
-      const b = Subject.of((f: Fn<number, number>) => f(5)).ap(Subject.of(f));
+      const a = A.of(f).ap(A.of(5));
+      const b = A.of((f: Fn<number, number>) => f(5)).ap(A.of(f));
       expect(a).toEqual(b);
-      expect(a).toEqual(Subject.of(25));
+      expect(a).toEqual(A.of(25));
     });
   });
 }
