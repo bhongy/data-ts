@@ -98,3 +98,9 @@ export function Laws(A: { of: <T>(x: T) => IApplicative<T> }) {
 //   of(fn)
 //     .ap(a)
 //     .ap(b);
+
+// export const liftA = (fn, m1) => m1.map(fn);
+// export const liftA2 = (fn, m1, m2) => m2.ap(liftA(fn, m1));
+// export const liftA3 = (fn, m1, m2, m3) => m3.ap(liftA2(fn, m1, m2));
+// const liftAN = (fn, m1, ...ms) =>
+//   ms.reduce((prev, curr) => curr.ap(prev), liftA(fn, m1));

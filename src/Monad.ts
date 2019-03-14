@@ -53,3 +53,5 @@ export function Laws(M: { of<T>(x: T): IMonad<T> }) {
     });
   });
 }
+
+// join :: Monad m => m (m a) -> m a

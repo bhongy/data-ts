@@ -55,7 +55,7 @@ class Just<A> implements Monad.Interface<A> {
 
   // map :: Maybe a ~> (a -> b) -> Maybe b
   map<B>(f: (a: A) => B): Maybe<B> {
-    return this.chain(x => of(f(x)));
+    return this.chain(x => just(f(x)));
   }
 
   // A is (b: B) => C
