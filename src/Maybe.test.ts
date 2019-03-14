@@ -2,11 +2,13 @@ import * as $Maybe from './Maybe';
 import { Maybe, just, nothing } from './Maybe';
 import * as Functor from './Functor';
 import * as Applicative from './Applicative';
+import * as Monad from './Monad';
 import { constant } from './utils';
 
 describe('Maybe', () => {
   Functor.Laws($Maybe);
   Applicative.Laws($Maybe);
+  Monad.Laws($Maybe);
 
   // taking the value out
   test('.fold', () => {

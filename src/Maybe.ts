@@ -2,7 +2,7 @@
  * Use when the cause of error does not need to be communicated.
  */
 
-import * as Applicative from './Applicative';
+import * as Monad from './Monad';
 
 /** Internal implementation. Do not export. */
 
@@ -12,7 +12,7 @@ const $type = Symbol('Maybe.type');
 const $Nothing = Symbol('Maybe.Nothing');
 const $Just = Symbol('Maybe.Just');
 
-class Nothing<A> implements Applicative.Interface<A> {
+class Nothing<A> implements Monad.Interface<A> {
   private readonly [$type] = $Nothing;
 
   fold<B, C>(f: () => B, g: (a: A) => C): B {
@@ -41,7 +41,7 @@ class Nothing<A> implements Applicative.Interface<A> {
   }
 }
 
-class Just<A> implements Applicative.Interface<A> {
+class Just<A> implements Monad.Interface<A> {
   private readonly [$type] = $Just;
   private readonly [$value]: A;
 
