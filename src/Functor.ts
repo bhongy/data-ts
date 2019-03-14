@@ -3,6 +3,7 @@
  *
  * Specification:
  * - implements `map` method: `map :: Functor f => f a ~> (a -> b) -> f b`
+ *   a.k.a fmap, <$>
  *
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
  * - identity: `u.map(a => a) == u`
@@ -11,6 +12,7 @@
  *   "mapping a function composition `g . f` is the same as mapping `f` then `g`"
  *
  * Intuitions:
+ * - mapping between categories - preserving structure
  * - applying a function to a value in a context (without altering the context)
  * - lifting a function into the computational context
  */
