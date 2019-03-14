@@ -7,6 +7,7 @@
  * - implements `of` function: `of :: Pointed f => a -> f a`
  *   a.k.a. pure, return, unit, point, singleton
  * - implements `ap` method: `ap :: Applicative f => f (a -> b) -> f a -> f b`
+ *   a.k.a. <*>
  *
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
  * - identity: `A.of(x => x).ap(u) == u`
@@ -80,3 +81,18 @@ export function Laws(Subject: { of: <T>(x: T) => IApplicative<T> }) {
     });
   });
 }
+
+// ---
+
+// Lift a binary function to apply to Applicatives
+// liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+// const liftA2 = <
+//   MA extends IApplicative<any>,
+//   MB extends IApplicative<any>,
+//   MC extends IApplicative<any>
+// >(
+//   fn: Curried2<MA, MB, MC>
+// ) => (a: MA) => (b: MB) =>
+//   of(fn)
+//     .ap(a)
+//     .ap(b);
