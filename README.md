@@ -44,6 +44,14 @@ $ yarn publish
 - [ ] Trie
 
 
+## Work in progress
+
+- track 1: LazyMaybe
+- track 2: List -- (Tree) -- (BinaryTree) -- (BST) -- (Red-Black Tree)
+                \_ (Stack)
+                \_ (Map)
+- track 3: Trie -- (RouteTrie)
+
 ## TODO Ideas
 
 - implements the lazy version of Either, Identity types that apply multiple maps per item
@@ -53,16 +61,15 @@ $ yarn publish
 
 ## References & Inspirations
 
-- https://github.com/fantasyland/fantasy-land
-- https://github.com/rpominov/static-land
-- https://github.com/gcanti/fp-ts
-- https://github.com/sanctuary-js
-- https://github.com/evilsoft/crocks
-- https://funkia.github.io/jabz/
-- https://github.com/origamitower/folktale
-- https://github.com/ramda/ramda-fantasy
-- https://github.com/futurize/futurize
-- https://github.com/fluture-js
+- [`gcanti/fp-ts`](https://github.com/gcanti/fp-ts)
+- [`sanctuary-js`](https://github.com/sanctuary-js)
+- [`evilsoft/crocks`](https://github.com/evilsoft/crocks)
+- [`funkia/jabz`](https://github.com/funkia/jabz)
+- [`origamitower/folktale`](https://github.com/origamitower/folktale)
+- [`ramda-fantasy`](https://github.com/ramda/ramda-fantasy)
+- [`fluture-js`](https://github.com/fluture-js)
+- [`fantasy-land`](https://github.com/fantasyland/fantasy-land)
+- [`static-land`](https://github.com/rpominov/static-land)
 
 Note: this project does not implemented to be in compliant with [Fantasyland](https://github.com/fantasyland/fantasy-land) but I draw a lot of inspiration from it. I however opt to be in consistent with Haskell interfaces but adapt it to be ergonomic in Typescript/Javascript.
 
