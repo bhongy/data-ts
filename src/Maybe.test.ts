@@ -1,14 +1,13 @@
 import * as $Maybe from './Maybe';
 import { Maybe, just, nothing } from './Maybe';
 import * as Monad from './Monad';
-import { constant } from './utils';
 
 describe('Maybe', () => {
   Monad.Laws($Maybe);
 
   // taking the value out
   test('.fold', () => {
-    const f = constant('puppy');
+    const f = () => 'puppy';
     const g = (s: string) => `cute ${s}`;
 
     const u: Maybe<string> = just('panda');
@@ -32,7 +31,7 @@ describe('Maybe', () => {
 
   describe('.chain', () => {
     const f = (x: number) => just(x ** 2);
-    const g = constant(nothing);
+    const g = () => nothing;
 
     expect(just(5).chain(f)).toEqual(just(25));
     expect(just(5).chain(g)).toEqual(nothing);
