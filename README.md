@@ -46,17 +46,34 @@ $ yarn publish
 
 ## Work in progress
 
-- track 1: LazyMaybe
-- track 2: List -- (Tree) -- (BinaryTree) -- (BST) -- (Red-Black Tree)
-                \_ (Stack)
-                \_ (Map)
-- track 3: Trie -- (RouteTrie)
+- track 1:
+  ```
+  LazyMaybe
+  ```
+- track 2:
+  ```
+  List -- (Tree) -- (BinaryTree) -- (BST) -- (Red-Black Tree)
+                 \_ (Stack)
+                 \_ (Map)
+  ```
+- track 3:
+  ```
+  Trie -- (RouteTrie)
+  ```
+- track 4:
+  ```
+  Monad2 -- (Either)
+  ```
+
 
 ## TODO Ideas
 
-- implements the lazy version of Either, Identity types that apply multiple maps per item
-- implements naive, non-persistent (but immutable) versions of: LinkedList, Stack, Tree, Dictionary (still useful for small inputs)
-- implements **persistent** versions of: LinkedList, Stack, Tree, Dictionary
+- create `Functor2`, `Applicative2`, `Monad2` to support `Either`
+- implement `Alternative` (`.alt`), `Semigroup`, `Monoid`, `Foldable`, `Traversable`
+- implement the lazy version of `Maybe`, `Either` that apply multiple chains/maps per item
+- implement naive, non-persistent (but immutable) versions of: (Linked)List, Stack, Tree, Dictionary (still useful for small inputs)
+- implement **persistent** versions of: LinkedList, Stack, Tree, Dictionary
+- see if it's possible to implement `type Maybe<T> = Nothing | Just<T>;` rather than `type Maybe<T> = Nothing<T> | Just<T>;`
 
 
 ## References & Inspirations
