@@ -1,34 +1,19 @@
-import { compose, identity } from './utils';
+import { Lazy, compose, constant } from './utils';
+import * as Functor from './Functor';
 
-// class Nothing {
-//   map(f: (x: never) => unknown): Maybe<never> {
-//     return this;
-//   }
-// }
+class Just<T> implements Functor.Interface<T> {
+  constructor(private readonly x: Lazy<T>) {}
 
-class Just<T, U = T> {
-  constructor(
-    private readonly __value: T,
-    private readonly __pipeline: (x: T) => U
-  ) {}
-
-  map<V>(f: (x: U) => V): Just<T, V> {
-    return new Just(this.__value, compose(f, this.__pipeline));
-  }
-
-  // this is wrong ...
-  chain<V>(f: (x: T) => Just<T, V>): Just<T, V> {
-    const $f = (x: T) => f(x).__value;
-    // @ts-ignore
-    return new Just(this.__value, compose($f, this.__pipeline))
+  map<U>(f: (x: T) => U): Maybe<U> {
+    // cannot use `constant` here because we don't have value `x`
+    return new Just(() => f(this.x()));
   }
 
   fold<U>(f: (x: T) => U): U {
-    // @ts-ignore
-    return compose(f, this.__pipeline)(this.__value);
+    return f(this.x());
   }
 }
 
-// export type Maybe<T> = Nothing | Just<T>;
-export const just = <T>(x: T) => new Just(x, identity);
-// export const nothing = new Nothing();
+export type Maybe<T> = Just<T>;
+// using `constant` here is fine because `x` is already a value
+export const just = <T>(x: T): Maybe<T> => new Just(constant(x));
