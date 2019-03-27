@@ -34,3 +34,32 @@ const safeShout = compose(
   safe(isString)
 )
 */
+
+// Lift a binary function to apply to Applicatives
+// liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+// const liftA2 = <
+//   MA extends Maybe<any>,
+//   MB extends Maybe<any>,
+//   MC extends Maybe<any>
+// >(
+//   fn: Curried2<MA, MB, MC>
+// ) => (a: MA) => (b: MB) =>
+//   of(fn).ap(a).ap(b);
+
+// maybe :: b -> (a -> b) -> Maybe a -> b
+// http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Maybe.html#v:maybe
+// const maybe = <A, B extends A>(
+//   defaultValue: B,
+//   f: (a: A) => B,
+//   ma: Maybe<A>
+// ): B => ma.fold(() => defaultValue, f);
+
+// fromMaybe :: A -> Maybe a -> b
+// const fromMaybe = <A>(defaultValue: A): Fn<Maybe<A>, A> =>
+//   maybe.bind(null, defaultValue, identity);
+
+// fromMaybe
+// listToMaybe
+// maybeToList
+// catMaybes
+// mapMaybes

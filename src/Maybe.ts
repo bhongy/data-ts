@@ -55,7 +55,9 @@ class Just<A> implements Monad.Interface<A> {
 
   // map :: Maybe a ~> (a -> b) -> Maybe b
   map<B>(f: (a: A) => B): Maybe<B> {
-    return this.chain(x => just(f(x)));
+    return this.chain(x => of(f(x)));
+    // return this.chain(compose(of, f)); // need to fix compose typing
+    // return of(f).ap(this);
   }
 
   // A is (b: B) => C
@@ -89,18 +91,3 @@ export const of = just;
 
 export const fromNullable = <A>(a: undefined | null | A): Maybe<A> =>
   a == null ? nothing : just(a);
-
-// ---
-
-// Lift a binary function to apply to Applicatives
-// liftA2 :: (a -> b -> c) -> f a -> f b -> f c
-// const liftA2 = <
-//   MA extends Maybe<any>,
-//   MB extends Maybe<any>,
-//   MC extends Maybe<any>
-// >(
-//   fn: Curried2<MA, MB, MC>
-// ) => (a: MA) => (b: MB) =>
-//   of(fn)
-//     .ap(a)
-//     .ap(b);
