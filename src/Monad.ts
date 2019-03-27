@@ -62,4 +62,5 @@ export function Laws(M: { of<T>(x: T): IMonad<T> }) {
   });
 }
 
+// remove one level of monadic structure
 // join :: Monad m => m (m a) -> m a
