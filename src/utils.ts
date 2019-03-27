@@ -8,7 +8,6 @@ export type Curried2<A, B, C> = (a: A) => (b: B) => C;
 export type Curried3<A, B, C, D> = (a: A) => (b: B) => (c: C) => D;
 
 export const identity = <A>(a: A): A => a;
-export const constant = <A>(a: A): Lazy<A> => () => a;
 
 // return a function (lazy) that when called
 // it will call the whole chain of composition

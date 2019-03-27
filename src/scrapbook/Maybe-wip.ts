@@ -16,7 +16,7 @@ const ifElse = <T, U, V>(
 // safe :: (a -> Boolean) -> a -> Maybe b
 // const safe = <T, U extends T>(predicate: Refinement<T, U>) =>
 const safe = <T, U extends T>(predicate: Refinement<T, U>) =>
-  // ifElse(predicate, just, constant(nothing));
+  // ifElse(predicate, just, () => nothing);
   (x: T): Maybe<U> => (predicate(x) ? just(x) : nothing);
 
 // maybeNumber :: a -> Maybe number
