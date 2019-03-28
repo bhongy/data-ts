@@ -1,7 +1,7 @@
 {
   "name": "data-ts",
   "version": "1.0.4",
-  "description": "Common algebraic structures heavily inspired by Haskell typeclasses adapted for fluent pointfree interfaces in Typescript.",
+  "description": "Common algebraic structures heavily inspired by Haskell type classes adapted for fluent pointfree interfaces in Typescript.",
   "repository": "git@github.com:bhongy/data-ts.git",
   "author": "Thanik Bhongbhibhat <email@thanik.me>",
   "license": "MIT",

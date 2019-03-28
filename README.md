@@ -1,8 +1,8 @@
 # data-ts
 
-Common algebraic structures heavily inspired by Haskell typeclasses adapted for fluent [pointfree](https://wiki.haskell.org/Pointfree) interfaces in Typescript. Strictly typed.
+Common algebraic structures heavily inspired by Haskell type classes adapted for fluent [pointfree](https://wiki.haskell.org/Pointfree) interfaces in Typescript. Strictly typed.
 
-![Relationship among Haskell algebraic typeclasses](./haskell-typesclasses-relationship.png)
+![Relationship among Haskell algebraic type classes](./haskell-type-classes-relationship.png)
 Source: [The Typeclassopedia](https://wiki.haskell.org/wikiupload/8/85/TMR-Issue13.pdf) by Brent Yorgey
 
 ## Install
