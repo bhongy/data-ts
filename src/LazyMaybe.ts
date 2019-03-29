@@ -15,7 +15,9 @@ const $Just = Symbol('Maybe.Just');
 
 class Nothing<T> implements Monad.Interface<T> {
   private readonly [$id] = $Nothing;
+  private readonly [$thunk]: Lazy<T>;
 
+  // eager
   fold<L, U>(f: () => L, g: (x: T) => U): L {
     return f();
   }
@@ -26,6 +28,11 @@ class Nothing<T> implements Monad.Interface<T> {
 
   ap<A, B>(this: Maybe<(a: A) => B>, other: Maybe<A>): Maybe<B> {
     return nothing;
+  }
+
+  run(): T {
+    // WRONG. fix this
+    return nothing as never;
   }
 
   chain<U>(f: (x: T) => Maybe<U>): Maybe<U> {
@@ -49,13 +56,22 @@ class Just<T> implements Monad.Interface<T> {
     this[$thunk] = thunk;
   }
 
+  run(): T {
+    return this[$thunk]();
+  }
+
+  // eager
   fold<L, U>(f: () => L, g: (x: T) => U): U {
     return g(this[$thunk]());
   }
 
   // map :: Maybe a ~> (a -> b) -> Maybe b
   map<U>(f: (x: T) => U): Maybe<U> {
-    return new Just(() => f(this[$thunk]()));
+    // create a new thunk that returns the result of `f(thunk()) ~> f(x)`
+    // put the thunk in `Just` because this is `Just`
+    const thunk = this[$thunk];
+    return new Just(() => f(thunk()));
+
     // this is better but need to fix compose (it doesn't infer type correctly)
     // return new Just(compose(f, this[$thunk]));
     // return this.chain(x => just(f(x)));
@@ -70,12 +86,18 @@ class Just<T> implements Monad.Interface<T> {
 
   // chain :: Maybe a ~> (a -> Maybe b) -> Maybe b
   chain<U>(f: (x: T) => Maybe<U>): Maybe<U> {
-    throw new NotImplementedError('chain');
+    // const thunk = this[$thunk];
+    // throw new NotImplementedError('chain');
+
+    // cannot call `Maybe<T>.run` because it could be Nothing
+    // what is run for `Nothing`?
+    // `this.run` is fine because we know we are in `Just`
+    return new Just(() => f(this.run()).run());
   }
 
   // this "runs" all "queued" functions
   toString(): string {
-    return `Just ${this[$thunk]()}`;
+    return `Just ${this.run()}`;
   }
 
   inspect() {

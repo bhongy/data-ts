@@ -1,21 +1,41 @@
-import { Fn } from './utils';
-import { Maybe, just } from './LazyMaybe';
+import { Maybe, just, nothing } from './LazyMaybe';
 
 describe('LazyMaybe', () => {
-  const f: Fn<number, number> = jest.fn((x: number) => x * 10);
-  const g: Fn<number, Maybe<number>> = jest.fn((x: number) => just(x / 10));
+  const f = jest.fn((x: number) => x * 10);
+  const g = jest.fn((x: number) => just(x / 10));
 
-  test('... lazy ...', () => {
+  beforeEach(() => {
+    f.mockClear();
+    g.mockClear();
+  })
+
+  test('Lazy: Just', () => {
     const u = just(1)
       .map(f)
-      .chain(g)
-      .map(f);
+      .map(f)
+      .chain(g);
 
     expect(f).not.toHaveBeenCalled();
     expect(g).not.toHaveBeenCalled();
 
-    const y = u.fold(() => null, (x: number) => x + 5);
+    const y = u.fold((): void => {}, (x: number) => x + 5);
     expect(y).toBe(15);
     expect(f).toHaveBeenCalledTimes(2);
+  });
+
+  test('Lazy: Nothing', () => {
+    const u = nothing
+      .map(f)
+      .map(f)
+      .chain(g);
+
+    expect(f).not.toHaveBeenCalled();
+    expect(g).not.toHaveBeenCalled();
+
+    const y = u.fold((): string => 'nothing', (x: number) => x + 5);
+    expect(y).toBe('nothing');
+
+    expect(f).not.toHaveBeenCalled();
+    expect(g).not.toHaveBeenCalled();
   });
 });

@@ -101,3 +101,5 @@ Note: this project does not implemented to be in compliant with [Fantasyland](ht
 https://www.quora.com/What-is-an-endofunctor
 
 `fmap` (haskell) can be viewed as `fmap :: Functor f => (a -> b) -> (f a -> f b)` which shows the preserved structor that maps from `(a -> b)` into `(f a -> f b)`
+
+- the benefit of using `.map`, `.chain`, etc is that the variable is captured in a very small, local context. also it leads to program with expressions rather than statements.
