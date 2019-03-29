@@ -8,8 +8,10 @@
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
  * - identity: `u.map(x => x) == u`
  *   "mapping identity over item(s) should have no effect"
+ *   `fmap id = id`
  * - composition: `u.map(compose(f, g)) == u.map(f).map(g)`
  *   "mapping a function composition `g . f` is the same as mapping `f` then `g`"
+ *   `fmap (g . h) = fmap g . fmap h
  *
  * Intuitions:
  * - mapping between categories - preserving structure

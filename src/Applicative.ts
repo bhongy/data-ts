@@ -9,6 +9,10 @@
  * - implements `ap` method: `ap :: Applicative f => f (a -> b) -> f a -> f b`
  *   a.k.a. <*>
  *
+ * class Functor f => Applicative f where
+ *   pure :: a -> f a
+ *   (<*>) :: f (a -> b) -> f a -> f b
+ *
  * Laws: http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
  * - identity: `A.of(x => x).ap(u) == u`
  * - composition:
@@ -16,6 +20,9 @@
  * - homomorphism: `A.of(f).ap(A.of(x)) == A.of(f(x))`
  *   "homomorphism means it preserves structure (function application)"
  * - interchange: `A.of(f).ap(A.of(x)) == A.of(f => f(x))).ap(f)`
+ * - relation to Functor: `u.map(f) == A.of(f).ap(u)`
+ *   `fmap f u = pure f <*> u`
+ *   `f <$> u = pure f <*> u`
  */
 
 import { Fn, compose, identity } from './utils';
@@ -80,6 +87,16 @@ export function Laws(A: { of: <T>(x: T) => IApplicative<T> }) {
       const b = A.of((f: Fn<number, number>) => f(5)).ap(A.of(f));
       expect(a).toEqual(b);
       expect(a).toEqual(A.of(25));
+    });
+
+    // relation to Functor: `u.map(f) == A.of(f).ap(u)`
+    test('relation to Functor', () => {
+      const f = square;
+      const u = A.of(12);
+      const a = u.map(f);
+      const b = A.of(square).ap(u);
+      expect(a).toEqual(b);
+      expect(a).toEqual(A.of(144));
     });
   });
 }

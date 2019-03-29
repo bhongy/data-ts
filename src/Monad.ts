@@ -13,6 +13,14 @@
  * - associativity: `m.chain(f).chain(g) == m.chain(x => f(x).chain(g))`
  * (also: https://wiki.haskell.org/Monad_laws)
  *
+ * return a >>= k = k a
+ * m >>= retrun = m
+ * m >>= (\x -> k x >>= h) = (m >>= k) >>= h
+ *
+ * return >=> g = g  // `return` is identity of `>=>`
+ * g >=> return = g
+ * (g >=> h) >=> k = g >=> (h >=> k)
+ *
  * Intuitions:
  * - program with effects (State, I/O, Nullability, Errors).
  */
