@@ -2,8 +2,8 @@
  * List v0 (WIP)
  */
 
-import * as Functor from '../Functor';
-import { Maybe, just, nothing } from '../Maybe';
+import * as Functor from './Functor';
+import { Maybe, just, nothing } from './Maybe';
 
 class Empty<T> implements Functor.Interface<T> {
   readonly length: number = 0;
@@ -81,18 +81,13 @@ class NonEmpty<T> implements Functor.Interface<T> {
   // zip
 }
 
-type List<T> = Empty<T> | NonEmpty<T>;
+export type List<T> = Empty<T> | NonEmpty<T>;
 
 // need a way to provide "initial" type when empty is in the input position
-const empty = <T>() => new Empty<T>();
-const nonEmpty = <T>(x: T, xs: List<T>): List<T> => new NonEmpty(x, xs);
+export const empty = <T>() => new Empty<T>();
+export const nonEmpty = <T>(x: T, xs: List<T>): List<T> => new NonEmpty(x, xs);
 
-const fromArray = <T>(arr: Array<T>): List<T> =>
+export const fromArray = <T>(arr: Array<T>): List<T> =>
   arr.reduce((xs, x) => nonEmpty(x, xs), empty<T>());
 
-const of = <T>(...args: Array<T>): List<T> => fromArray(args);
-
-// TEST >
-// const u = empty<number>().concat(fromArray([1,3,5]));
-// TEST >
-// const v = fromArray([1,3,5]).concat(empty());
+export const of = <T>(...args: Array<T>): List<T> => fromArray(args);
