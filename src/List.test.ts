@@ -1,4 +1,5 @@
 import * as $List from './List';
+import { empty } from './List';
 import * as Functor from './Functor';
 import { just, nothing } from './Maybe';
 
@@ -6,16 +7,15 @@ describe('List', () => {
   Functor.Laws($List);
 
   const xs = $List.of(1, 3, 5, 7);
-  const { empty } = $List;
 
   test('.concat', () => {
     // need to provide type if empty is in the input position
     expect((empty as $List.List<number>).concat(xs)).toEqual(xs);
     expect(xs.concat(empty)).toEqual(xs);
 
-    const c = $List.of(1, 2, 3);
-    const d = $List.of(4, 5, 6);
-    expect(c.concat(d).toArray()).toEqual([1, 2, 3, 4, 5, 6]);
+    const a = $List.of(1, 2, 3);
+    const b = $List.of(4, 5, 6);
+    expect(a.concat(b).toArray()).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
   test('.map [example]', () => {
