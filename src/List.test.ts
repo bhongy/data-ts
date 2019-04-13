@@ -6,11 +6,11 @@ describe('List', () => {
   Functor.Laws($List);
 
   const xs = $List.of(1, 3, 5, 7);
-  // need to provide type if empty is in the input position
-  const empty = $List.empty<number>();
+  const { empty } = $List;
 
   test('.concat', () => {
-    expect(empty.concat(xs)).toEqual(xs);
+    // need to provide type if empty is in the input position
+    expect((empty as $List.List<number>).concat(xs)).toEqual(xs);
     expect(xs.concat(empty)).toEqual(xs);
 
     const c = $List.of(1, 2, 3);

@@ -9,12 +9,20 @@ import { Maybe, just, nothing } from './Maybe';
 
 class Empty<T> implements Functor.Interface<T> {
   readonly length: number = 0;
-  readonly head: Maybe<T> = nothing;
-  readonly last: Maybe<T> = nothing;
+  // readonly head: Maybe<T> = nothing;
+  // readonly last: Maybe<T> = nothing;
+
+  get head(): Maybe<T> {
+    return nothing;
+  }
+
+  get last(): Maybe<T> {
+    return nothing;
+  }
 
   // must be lazy otherwise new Empty() will be recursively called indefinitely
   get tail(): List<T> {
-    return empty();
+    return empty;
   }
 
   // (++) :: [a] -> [a] -> [a]
@@ -26,7 +34,7 @@ class Empty<T> implements Functor.Interface<T> {
   // concatMap
 
   map<U>(f: (x: T) => U): List<U> {
-    return empty();
+    return empty;
   }
 
   uncons(): Maybe<[T, List<T>]> {
@@ -94,10 +102,10 @@ class NonEmpty<T> implements Functor.Interface<T> {
 export type List<T> = Empty<T> | NonEmpty<T>;
 
 // need a way to provide "initial" type when empty is in the input position
-export const empty = <T>() => new Empty<T>();
+export const empty: Empty<never> = new Empty();
 export const nonEmpty = <T>(x: T, xs: List<T>): List<T> => new NonEmpty(x, xs);
 
 export const fromArray = <T>(arr: Array<T>): List<T> =>
-  arr.reduceRight((xs, x) => nonEmpty(x, xs), empty<T>());
+  arr.reduceRight((xs, x) => nonEmpty(x, xs), empty as Empty<T>);
 
 export const of = <T>(...args: Array<T>): List<T> => fromArray(args);
