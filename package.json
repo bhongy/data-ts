@@ -11,14 +11,16 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "prepublish": "yarn compile",
-    "clean": "rm -rf ./lib",
-    "compile": "yarn clean && tsc"
+    "prepublish": "yarn clean && tsc -p tsconfig.publish.json",
+    "clean": "rm -rf ./lib"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "jest": "^24.5.0",
     "ts-jest": "^24.0.1",
     "typescript": "3.4.1"
+  },
+  "optionalDependencies": {
+    "jest": "^24.5.0"
   }
 }
