@@ -3,27 +3,42 @@
  */
 
 import * as Functor from '../Functor';
+import { Maybe, just, nothing } from '../Maybe';
 
 class Empty<T> implements Functor.Interface<T> {
+  readonly length: number = 0;
+
   // (++) :: [a] -> [a] -> [a]
   // (++) [] ys = ys
   concat(ys: List<T>): List<T> {
     return ys;
   }
 
-  length(): number {
-    return 0;
-  }
-
-  // uncons
+  // concatMap
 
   map<U>(f: (x: T) => U): List<U> {
-    return empty;
+    return empty();
+  }
+
+  head(): Maybe<T> {
+    return nothing;
+  }
+
+  tail(): List<T> {
+    return empty();
+  }
+
+  uncons(): Maybe<[T, List<T>]> {
+    return nothing;
   }
 }
 
 class NonEmpty<T> implements Functor.Interface<T> {
-  constructor(private readonly x: T, private readonly xs: List<T>) {}
+  readonly length: number;
+
+  constructor(private readonly x: T, private readonly xs: List<T>) {
+    this.length = 1 + xs.length;
+  }
 
   // (++) :: [a] -> [a] -> [a]
   // (++) x:xs ys = x : xs ++ ys
@@ -32,16 +47,25 @@ class NonEmpty<T> implements Functor.Interface<T> {
     return nonEmpty(x, xs.concat(ys));
   }
 
-  length(): number {
-    const { x, xs } = this;
-    return 1 + xs.length();
-  }
-
-  // uncons
-
   map<U>(f: (x: T) => U): List<U> {
     const { x, xs } = this;
     return nonEmpty(f(x), xs.map(f));
+  }
+
+  // concatMap :: Foldable t => (a -> [b]) -> t a -> [b]
+
+  head(): Maybe<T> {
+    return just(this.x);
+  }
+
+  tail(): List<T> {
+    return this.xs;
+  }
+
+  // deconstruct a list into its head and tail
+  uncons(): Maybe<[T, List<T>]> {
+    const { x, xs } = this;
+    return just([x, xs]);
   }
 
   // fold
@@ -59,6 +83,16 @@ class NonEmpty<T> implements Functor.Interface<T> {
 
 type List<T> = Empty<T> | NonEmpty<T>;
 
-// `never` is assignable to any types
-const empty: List<never> = new Empty();
+// need a way to provide "initial" type when empty is in the input position
+const empty = <T>() => new Empty<T>();
 const nonEmpty = <T>(x: T, xs: List<T>): List<T> => new NonEmpty(x, xs);
+
+const fromArray = <T>(arr: Array<T>): List<T> =>
+  arr.reduce((xs, x) => nonEmpty(x, xs), empty<T>());
+
+const of = <T>(...args: Array<T>): List<T> => fromArray(args);
+
+// TEST >
+// const u = empty<number>().concat(fromArray([1,3,5]));
+// TEST >
+// const v = fromArray([1,3,5]).concat(empty());
