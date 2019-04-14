@@ -38,7 +38,7 @@ $ yarn publish
 - [X] Maybe
 - [ ] Either
 - [ ] Task
-- [ ] List
+- [X] List
 - [ ] Map
 - [ ] Set
 - [ ] Trie
@@ -52,7 +52,7 @@ $ yarn publish
   ```
 - track 2:
   ```
-  List -- (Tree) -- (BinaryTree) -- (BST) -- (Red-Black Tree)
+  ✅List -- Tree -- (BinaryTree) -- (BST) -- (Red-Black Tree)
                  \_ (Stack)
                  \_ (Map)
   ```

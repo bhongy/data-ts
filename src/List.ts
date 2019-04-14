@@ -1,6 +1,4 @@
 /**
- * List v0 (WIP)
- *
  * http://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html
  */
 
