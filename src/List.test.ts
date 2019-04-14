@@ -23,6 +23,16 @@ describe('List', () => {
     expect(xs.map(square).toArray()).toEqual([1, 9, 25, 49]);
   });
 
+  // TODO: test via Foldable laws
+  test('.foldl', () => {
+    expect(xs.foldl((acc, x) => `${acc}${x}`, '')).toEqual('1357');
+  });
+
+  // TODO: test via Foldable laws
+  test('.foldr', () => {
+    expect(xs.foldr((x, acc) => `${acc}${x}`, '')).toEqual('7531');
+  });
+
   test('.length', () => {
     expect(empty.length).toEqual(0);
     expect(xs.length).toEqual(4);

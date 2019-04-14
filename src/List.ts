@@ -25,17 +25,27 @@ class Empty<T> implements Functor.Interface<T> {
     return empty;
   }
 
+  map<U>(f: (x: T) => U): List<U> {
+    return empty;
+  }
+
+  foldl<U>(f: (acc: U, x: T) => U, initial: U): U {
+    return initial;
+  }
+
+  foldr<U>(f: (x: T, acc: U) => U, initial: U): U {
+    return initial;
+  }
+
   // (++) :: [a] -> [a] -> [a]
   // (++) [] ys = ys
   concat(ys: List<T>): List<T> {
     return ys;
   }
 
-  // concatMap
-
-  map<U>(f: (x: T) => U): List<U> {
-    return empty;
-  }
+  // concatMap<U>(f: (x: T) => List<U>): List<U> {
+  //   return empty;
+  // }
 
   uncons(): Maybe<[T, List<T>]> {
     return nothing;
@@ -61,6 +71,33 @@ class NonEmpty<T> implements Functor.Interface<T> {
     this.last = xs instanceof Empty ? just(x) : xs.last;
   }
 
+  map<U>(f: (x: T) => U): List<U> {
+    const { x, xs } = this;
+    return nonEmpty(f(x), xs.map(f));
+  }
+
+  // fold :: Monoid m => t m -> m
+  // foldMap :: Monoid m => (a -> m) -> t a -> m
+
+  // https://wiki.haskell.org/Foldr_Foldl_Foldl'
+
+  // foldl :: (b -> a -> b) -> b -> t a -> b
+  foldl<U>(f: (acc: U, x: T) => U, initial: U): U {
+    const { x, xs } = this;
+    const u = f(initial, x);
+    return xs.foldl(f, u);
+  }
+
+  // foldr :: (a -> b -> b) -> b -> t a -> b
+  foldr<U>(f: (x: T, acc: U) => U, initial: U): U {
+    const { x, xs } = this;
+    return f(x, xs.foldr(f, initial));
+  }
+
+  // special folds: and, or, any, all
+
+  // append
+
   // (++) :: [a] -> [a] -> [a]
   // (++) x:xs ys = x : xs ++ ys
   concat(ys: List<T>): List<T> {
@@ -68,12 +105,8 @@ class NonEmpty<T> implements Functor.Interface<T> {
     return nonEmpty(x, xs.concat(ys));
   }
 
-  map<U>(f: (x: T) => U): List<U> {
-    const { x, xs } = this;
-    return nonEmpty(f(x), xs.map(f));
-  }
-
   // concatMap :: Foldable t => (a -> [b]) -> t a -> [b]
+  // concatMap<U>(f: (x: T) => List<U>): List<U> {}
 
   // deconstruct a list into its head and tail
   uncons(): Maybe<[T, List<T>]> {
@@ -85,11 +118,6 @@ class NonEmpty<T> implements Functor.Interface<T> {
     const { x, xs } = this;
     return [x, ...xs.toArray()];
   }
-
-  // fold
-  // foldRight
-
-  // special folds: and, or, any, all
 
   // take, drop, takeWhile, dropWhile
 
