@@ -2,10 +2,18 @@ import * as Trie from './Trie';
 
 describe('Trie', () => {
   it('adding nodes', () => {
-    const trie = Trie.create();
+    let trie = Trie.create();
     // trie.add(['a'], 'a.value');
     // trie.add(['a', 'b', 'c'], 'abc.value');
-    expect(trie).toEqual({ $$tag: 'Trie' });
+    trie = trie.add(['a']);
+    trie = trie.add(['b']);
+    trie = trie.add(['c']);
+    trie = trie.add(['a', 'b', 'c']);
+    // trie.add(['c', 'a', 'p']);
+    // trie.add(['c', 'a', 't']);
+
+    expect(trie).toEqual({});
+
     // expect(trie.toJson()).toEqual({
     //   a: {
     //     _value: 'a.value',

@@ -34,30 +34,79 @@ interface INode<T> {
   // values -> Return all values in the trie, in sorted order according to the keys.
 }
 
+/*
 class Trie {
   readonly $$tag = 'Trie';
   constructor(private readonly children: Map<string, Trie>) {}
 
-  // add(keys: Array<string>): Trie {}
+  add([k, ...ks]: Array<string>): Trie {
+    if (k == null) {
+      return this;
+    }
+    const next = this.children.get(k) || create();
+    return new Trie(this.children.set(k, next.add(ks)));
+  }
+}
+*/
+
+type Trie = Empty | Branch | Leaf;
+
+interface TrieNodeInterface {
+  isEmpty(): boolean;
 }
 
-class Branch {
-  readonly $$tag = 'Trie.Branch';
-  add(ks: Array<string>) {
+class Empty implements TrieNodeInterface {
+  private readonly $$tag = 'Trie.Empty';
 
+  isEmpty(): boolean {
+    return true;
   }
 }
 
 class Leaf {
-  readonly $$tag = 'Trie.Leaf';
-  add(keys: Array<string>) {
-    const [k, ks] = keys;
-    if (ks.length === 0) {
-      return new Leaf();
-    }
-    const new Branch();
+  private readonly $$tag = 'Trie.Leaf';
+  // constructor(readonly k: string) {}
+
+  // add([k, ...ks]: Array<string>): Trie {
+  //   if (k == null) {
+  //     return this;
+  //   }
+  //   const next = leaf(k);
+  //   const children = new Map().set(k, next.add(ks));
+  //   console.log('leaf', children);
+  //   return branch(children);
+  // }
+
+  isEmpty(): boolean {
+    return false;
   }
 }
+
+class Branch {
+  // private readonly $$tag = 'Trie.Branch';
+  // constructor(/*private*/ readonly children: Map<string, Trie>) {}
+
+  // add([k, ...ks]: Array<string>) {
+  //   if (k == null) {
+  //     return this;
+  //   }
+  //   const next = this.children.get(k) || leaf();
+  //   const children = this.children.set(k, next.add(ks));
+  //   console.log('branch', children);
+  //   return branch(children);
+  // }
+
+  isEmpty(): boolean {
+    return false;
+  }
+}
+
+const empty: Trie = new Empty();
+const singleton = (k: string): Trie => arc(k, empty);
+
+// const leaf = (k: string): Trie => new Leaf(k);
+// const branch = (children: Map<string, Trie>): Trie => new Branch(children);
+// export const create = leaf;
 
 // Insert ?
 // interface Add<T> {
@@ -81,5 +130,3 @@ class Leaf {
 // };
 
 // export const toJson = null;
-
-export const create = () => new Trie();
