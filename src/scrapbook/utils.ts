@@ -23,3 +23,25 @@ const re = pick({ a: 10, b: false }, ['a']);
 function pluck<T, K extends keyof T>(o: T, keys: Array<K>): T[K][] {
   return keys.map(k => o[k]);
 }
+
+function filterMap<T, U>(
+  pred: (x: T) => boolean,
+  f: (x: T) => U,
+  xs: Array<T>
+): Array<U> {
+  return xs.reduce((ys, x) => (pred(x) ? [...ys, f(x)] : ys), [] as Array<U>);
+}
+
+function partitionMap<T, L, R>(
+  isLeft: (x: T) => boolean,
+  mapL: (x: T) => L,
+  mapR: (x: T) => R,
+  xs: Array<T>
+): [Array<L>, Array<R>] {
+  const left: Array<L> = [];
+  const right: Array<R> = [];
+  xs.forEach(x => {
+    isLeft(x) ? left.push(mapL(x)) : right.push(mapR(x));
+  });
+  return [left, right];
+}
