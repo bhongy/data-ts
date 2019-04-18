@@ -4,6 +4,7 @@
  * Most operations are O(n) time.
  * O(n) space. Storing only the minimum data (value and next pointer).
  *
+ * http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-List.html
  * http://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html
  */
 import * as Functor from '../Functor';
@@ -12,10 +13,6 @@ import { Maybe, just, nothing } from '../Maybe';
 class Empty<T> implements Functor.Interface<T> {
   uncons(): Maybe<[T, List<T>]> {
     return nothing;
-  }
-
-  concat(ys: List<T>): List<T> {
-    return ys;
   }
 
   get length(): number {
@@ -33,6 +30,10 @@ class Empty<T> implements Functor.Interface<T> {
 
   get last(): Maybe<T> {
     return nothing;
+  }
+
+  append(ys: List<T>): List<T> {
+    return ys;
   }
 
   foldl<U>(f: (acc: U, x: T) => U, initial: U): U {
@@ -61,17 +62,9 @@ class NonEmpty<T> implements Functor.Interface<T> {
     return just([x, xs]);
   }
 
-  // (++) :: [a] -> [a] -> [a]
-  // (++) [] ys = ys <-- in Empty class
-  // (++) x:xs ys = x : xs ++ ys
-  concat(ys: List<T>): List<T> {
-    const { x, xs } = this;
-    return nonEmpty(x, xs.concat(ys));
-  }
-
+  // concat :: [[a]] -> [a]
   // concatMap :: Foldable t => (a -> [b]) -> t a -> [b]
   // concatMap<U>(f: (x: T) => List<U>): List<U> {}
-  // append
 
   // O(n) time
   get length(): number {
@@ -96,6 +89,15 @@ class NonEmpty<T> implements Functor.Interface<T> {
   get last(): Maybe<T> {
     const { x, xs } = this;
     return xs instanceof Empty ? just(x) : xs.last;
+  }
+
+  // TODO: Semigroup -> Monoid
+  // (++) :: [a] -> [a] -> [a]
+  // (++) [] ys = ys <-- in Empty class
+  // (++) x:xs ys = x : xs ++ ys
+  append(ys: List<T>): List<T> {
+    const { x, xs } = this;
+    return nonEmpty(x, xs.append(ys));
   }
 
   // fold :: Monoid m => t m -> m

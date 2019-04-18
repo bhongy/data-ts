@@ -27,7 +27,7 @@ class Empty<T> implements Functor.Interface<T> {
     return nothing;
   }
 
-  concat(ys: List<T>): List<T> {
+  append(ys: List<T>): List<T> {
     return ys;
   }
 
@@ -67,9 +67,9 @@ class NonEmpty<T> implements Functor.Interface<T> {
     return just([x, xs]);
   }
 
-  concat(ys: List<T>): List<T> {
+  append(ys: List<T>): List<T> {
     const { x, xs } = this;
-    return nonEmpty(x, xs.concat(ys));
+    return nonEmpty(x, xs.append(ys));
   }
 
   foldl<U>(f: (acc: U, x: T) => U, initial: U): U {
