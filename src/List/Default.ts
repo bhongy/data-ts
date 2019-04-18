@@ -32,7 +32,7 @@ class Empty<T> implements Functor.Interface<T> {
     return nothing;
   }
 
-  append(ys: List<T>): List<T> {
+  concat(ys: List<T>): List<T> {
     return ys;
   }
 
@@ -61,10 +61,6 @@ class NonEmpty<T> implements Functor.Interface<T> {
     const { x, xs } = this;
     return just([x, xs]);
   }
-
-  // concat :: [[a]] -> [a]
-  // concatMap :: Foldable t => (a -> [b]) -> t a -> [b]
-  // concatMap<U>(f: (x: T) => List<U>): List<U> {}
 
   // O(n) time
   get length(): number {
@@ -95,9 +91,9 @@ class NonEmpty<T> implements Functor.Interface<T> {
   // (++) :: [a] -> [a] -> [a]
   // (++) [] ys = ys <-- in Empty class
   // (++) x:xs ys = x : xs ++ ys
-  append(ys: List<T>): List<T> {
+  concat(ys: List<T>): List<T> {
     const { x, xs } = this;
-    return nonEmpty(x, xs.append(ys));
+    return nonEmpty(x, xs.concat(ys));
   }
 
   // fold :: Monoid m => t m -> m

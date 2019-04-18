@@ -14,15 +14,15 @@ describe('List', () => {
     expect($List.of(1, 2, 3).uncons()).toEqual(just([1, $List.of(2, 3)]));
   });
 
-  test('.append', () => {
+  test('.concat', () => {
     // need to provide type if empty is in the input position
     const empty = $List.empty as $List.List<number>;
-    expect(empty.append(xs)).toEqual(xs);
-    expect(xs.append(empty)).toEqual(xs);
+    expect(empty.concat(xs)).toEqual(xs);
+    expect(xs.concat(empty)).toEqual(xs);
 
     const a = $List.of(1, 2, 3);
     const b = $List.of(4, 5, 6);
-    expect(a.append(b).toArray()).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(a.concat(b).toArray()).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
   // TODO: test via Foldable laws
