@@ -8,9 +8,10 @@
  * http://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html
  */
 import * as Functor from '../Functor';
+import * as Monoid from '../Monoid';
 import { Maybe, just, nothing } from '../Maybe';
 
-class Empty<T> implements Functor.Interface<T> {
+class Empty<T> implements Functor.Interface<T>, Monoid.Interface<T> {
   uncons(): Maybe<[T, List<T>]> {
     return nothing;
   }
@@ -53,7 +54,7 @@ class Empty<T> implements Functor.Interface<T> {
   }
 }
 
-class NonEmpty<T> implements Functor.Interface<T> {
+class NonEmpty<T> implements Functor.Interface<T>, Monoid.Interface<T> {
   constructor(private readonly x: T, private readonly xs: List<T>) {}
 
   // deconstruct a list into its head and tail
@@ -87,10 +88,7 @@ class NonEmpty<T> implements Functor.Interface<T> {
     return xs instanceof Empty ? just(x) : xs.last;
   }
 
-  // TODO: Semigroup -> Monoid
-  // (++) :: [a] -> [a] -> [a]
-  // (++) [] ys = ys <-- in Empty class
-  // (++) x:xs ys = x : xs ++ ys
+  // a.k.a. (++)
   concat(ys: List<T>): List<T> {
     const { x, xs } = this;
     return nonEmpty(x, xs.concat(ys));
@@ -98,6 +96,7 @@ class NonEmpty<T> implements Functor.Interface<T> {
 
   // fold :: Monoid m => t m -> m
   // foldMap :: Monoid m => (a -> m) -> t a -> m
+  // getSum . foldMap Sum [5, 6, 10]
   // https://wiki.haskell.org/Foldr_Foldl_Foldl'
 
   // foldl :: (b -> a -> b) -> b -> t a -> b

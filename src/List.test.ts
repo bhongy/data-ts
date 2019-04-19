@@ -1,9 +1,11 @@
 import { Default as $List } from './List';
 import * as Functor from './Functor';
+import * as Monoid from './Monoid';
 import { just, nothing } from './Maybe';
 
 describe('List', () => {
   Functor.Laws($List);
+  Monoid.Laws($List);
 
   const xs = $List.of(1, 3, 5, 7);
 
@@ -12,17 +14,6 @@ describe('List', () => {
     expect($List.of(1).uncons()).toEqual(just([1, $List.empty]));
     expect($List.of(1, 2).uncons()).toEqual(just([1, $List.of(2)]));
     expect($List.of(1, 2, 3).uncons()).toEqual(just([1, $List.of(2, 3)]));
-  });
-
-  test('.concat', () => {
-    // need to provide type if empty is in the input position
-    const empty = $List.empty as $List.List<number>;
-    expect(empty.concat(xs)).toEqual(xs);
-    expect(xs.concat(empty)).toEqual(xs);
-
-    const a = $List.of(1, 2, 3);
-    const b = $List.of(4, 5, 6);
-    expect(a.concat(b).toArray()).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
   // TODO: test via Foldable laws
@@ -67,5 +58,16 @@ describe('List', () => {
   test('.map [example]', () => {
     const square = (x: number) => x * x;
     expect(xs.map(square).toArray()).toEqual([1, 9, 25, 49]);
+  });
+
+  test('.concat [example]', () => {
+    // need to provide type if empty is in the input position
+    const empty = $List.empty as $List.List<number>;
+    expect(empty.concat(xs)).toEqual(xs);
+    expect(xs.concat(empty)).toEqual(xs);
+
+    const a = $List.of(1, 2, 3);
+    const b = $List.of(4, 5, 6);
+    expect(a.concat(b).toArray()).toEqual([1, 2, 3, 4, 5, 6]);
   });
 });

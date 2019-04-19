@@ -12,9 +12,10 @@
  * http://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html
  */
 import * as Functor from '../Functor';
+import * as Monoid from '../Monoid';
 import { Maybe, just, nothing } from '../Maybe';
 
-class Empty<T> implements Functor.Interface<T> {
+class Empty<T> implements Functor.Interface<T>, Monoid.Interface<T> {
   readonly length: number = 0;
   readonly head: Maybe<T> = nothing;
   // `empty` refers to "this" so we can't `= empty` otherwise
@@ -48,7 +49,7 @@ class Empty<T> implements Functor.Interface<T> {
   }
 }
 
-class NonEmpty<T> implements Functor.Interface<T> {
+class NonEmpty<T> implements Functor.Interface<T>, Monoid.Interface<T> {
   readonly length: number;
   readonly head: Maybe<T>;
   readonly tail: List<T>;
