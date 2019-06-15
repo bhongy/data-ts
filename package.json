@@ -23,8 +23,5 @@
     "jest": "^24.5.0",
     "ts-jest": "^24.0.1",
     "typescript": "3.4.3"
-  },
-  "optionalDependencies": {
-    "jest": "^24.5.0"
   }
 }
