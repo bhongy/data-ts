@@ -1,9 +1,11 @@
 import * as $Maybe from './Maybe';
 import { Maybe, just, nothing } from './Maybe';
 import * as Monad from './Monad';
+import * as Monoid from './Monoid';
 
 describe('Maybe', () => {
   Monad.Laws($Maybe);
+  Monoid.Laws($Maybe);
 
   // taking the value out
   test('.fold', () => {

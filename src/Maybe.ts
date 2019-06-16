@@ -3,6 +3,7 @@
  */
 
 import * as Monad from './Monad';
+import * as Monoid from './Monoid';
 
 /** Internal implementation. Do not export. */
 
@@ -12,7 +13,7 @@ const $type = Symbol('Maybe.type');
 const $Nothing = Symbol('Maybe.Nothing');
 const $Just = Symbol('Maybe.Just');
 
-class Nothing<A> implements Monad.Interface<A> {
+class Nothing<A> implements Monad.Interface<A>, Monoid.Interface<A> {
   private readonly [$type] = $Nothing;
 
   fold<B, C>(f: () => B, g: (a: A) => C): B {
@@ -32,6 +33,13 @@ class Nothing<A> implements Monad.Interface<A> {
     return nothing;
   }
 
+  concat<A extends Monoid.Interface<T>, T>(
+    this: Maybe<A>,
+    other: Maybe<A>
+  ): Maybe<A> {
+    return other;
+  }
+
   toString(): string {
     return 'Nothing';
   }
@@ -41,7 +49,7 @@ class Nothing<A> implements Monad.Interface<A> {
   }
 }
 
-class Just<A> implements Monad.Interface<A> {
+class Just<A> implements Monad.Interface<A>, Monoid.Interface<A> {
   private readonly [$type] = $Just;
   private readonly [$value]: A;
 
@@ -71,6 +79,13 @@ class Just<A> implements Monad.Interface<A> {
     return f(this[$value]);
   }
 
+  concat<A extends Monoid.Interface<T>, T>(
+    this: Maybe<A>,
+    other: Maybe<A>
+  ): Maybe<A> {
+    return other.fold(() => this, y => this.map(x => x.concat(y)));
+  }
+
   toString(): string {
     return `Just ${this[$value]}`;
   }
@@ -87,7 +102,21 @@ export const nothing: Maybe<never> = new Nothing();
 export const just = <A>(a: A): Maybe<A> => new Just(a);
 
 export const of = just;
-// export const empty = nothing;
+export const empty = nothing;
 
 export const fromNullable = <A>(a: undefined | null | A): Maybe<A> =>
   a == null ? nothing : just(a);
+
+/*
+notice the value inside (`a`) must be a member of Semigroup
+notice also that `a` in instance line is a type
+  while `a` and `b` in implementation lines are name bindings (variables)
+
+instance Semigroup a => Semigroup (Maybe a) where
+    Nothing <> b       = b
+    a       <> Nothing = a
+    Just a  <> Just b  = Just (a <> b)
+
+instance Semigroup a => Monoid (Maybe a) where
+    mempty = Nothing
+*/

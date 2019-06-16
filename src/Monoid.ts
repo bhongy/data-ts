@@ -34,9 +34,20 @@ export { IMonoid as Interface };
 // how to enforce instead of "any" `IMonoid<T>`
 // it must be the same Monoid instances
 // i.e. List<T> -> List<T> or Maybe<T> -> Maybe<T>
-export function Laws(M: { of: <T>(x: T) => IMonoid<T>; empty: IMonoid<never> }) {
+export function Laws(M: {
+  // T must also be a monoid
+  of: <T extends IMonoid<U>, U>(x: T) => IMonoid<T>;
+  empty: IMonoid<never>;
+}) {
+  class Sum implements IMonoid<number> {
+    constructor(readonly x: number) {}
+    concat(o: Sum): Sum {
+      return new Sum(o.x + this.x);
+    }
+  }
+
   describe('Monoid Laws (.concat, M.empty)', () => {
-    const x = 5;
+    const x = new Sum(5);
     const a = M.of(x);
 
     // left identity: `M.empty().concat(m) == m`
@@ -52,8 +63,8 @@ export function Laws(M: { of: <T>(x: T) => IMonoid<T>; empty: IMonoid<never> }) 
 
     // associativity: `m.chain(f).chain(g) == m.chain(x => f(x).chain(g))`
     test('associativity', () => {
-      const b = M.of(70);
-      const c = M.of(42);
+      const b = M.of(new Sum(70));
+      const c = M.of(new Sum(42));
       expect(a.concat(b).concat(c) == a.concat(b.concat(c)));
     });
   });

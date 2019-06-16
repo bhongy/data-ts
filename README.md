@@ -73,6 +73,7 @@ $ yarn publish
 - implement the lazy version of `Maybe`, `Either` that apply multiple chains/maps per item
 - implement naive, non-persistent (but immutable) versions of: (Linked)List, Stack, Tree, Dictionary (still useful for small inputs)
 - implement **persistent** versions of: LinkedList, Stack, Tree, Dictionary
+- implement Maybe Monoid wrappers like `First`, `Last`
 - see if it's possible to implement `type Maybe<T> = Nothing | Just<T>;` rather than `type Maybe<T> = Nothing<T> | Just<T>;`
 
 
